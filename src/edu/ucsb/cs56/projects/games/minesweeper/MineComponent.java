@@ -1,4 +1,4 @@
-package edu.ucsb.cs56.S12.dreta.Mine;
+package edu.ucsb.cs56.projects.games.minesweeper;
 import java.awt.GridLayout;
 import javax.swing.JComponent;
 import javax.swing.JButton;

@@ -1,4 +1,4 @@
-package edu.ucsb.cs56.S12.dreta.Mine;
+package edu.ucsb.cs56.projects.games.minesweeper;
 
 /**
  * CLI MineSweeper Hidden (Functioning) Class

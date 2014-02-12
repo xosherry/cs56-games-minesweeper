@@ -1,4 +1,4 @@
-package edu.ucsb.cs56.S12.dreta.Mine;
+package edu.ucsb.cs56.projects.games.minesweeper;
 
 /**
  An interface to represent a place to send messages.
