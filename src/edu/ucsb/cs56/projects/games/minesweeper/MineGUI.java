@@ -1,5 +1,5 @@
 package edu.ucsb.cs56.projects.games.minesweeper;
-import javax.swing.JFrame;
+import javax.swing.*;
 import java.awt.ComponentOrientation;
 
 /** MineGUI.java is a GUI interface for MineSweeper that uses
@@ -22,8 +22,13 @@ public class MineGUI {
        Interface game = new GUIGrid();
        Messager m = new SOMessager();
 
+       JPanel jp = new JPanel();
+       JButton b = new JButton("click me");
+       jp.add(b);
+       
        MineComponent mc = new MineComponent(game, m);
-       frame.getContentPane().add(mc);
+       jp.add(mc);
+       frame.getContentPane().add(jp);
 
        frame .applyComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
        frame. setSize(650,600) ;
