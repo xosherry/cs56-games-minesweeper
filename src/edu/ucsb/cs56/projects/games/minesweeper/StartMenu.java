@@ -13,11 +13,15 @@ import javax.swing.*;
 */
 
 public class StartMenu {
-	JButton NewGame;
-	JButton Help;
+	JButton newGame;
+	JButton help;
+	JButton newGamePause;
+	JButton helpPause;
+	JButton resume;
 	JFrame frame;
 	JPanel menu;
 	JPanel game;
+	JPanel pause;
 
 	/** no-arg constructor which creates the GUI of the Main Menu for Minesweeper
 	 *  This menu includes a start and help button
@@ -25,17 +29,9 @@ public class StartMenu {
 	public StartMenu() {
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		menu = new JPanel(new BorderLayout());
-		NewGame = new JButton("New Game");
-		Help = new JButton("Help");
-		addActionListener(NewGame, "New Game");
-		addActionListener(Help, "Help");
+		createPausePanel();
+		createMainMenu();
 
-		menu.setPreferredSize(new Dimension(650, 600));
-		menu.setBackground(Color.green);
-		menu.add(NewGame, BorderLayout.NORTH);
-		menu.add(Help, BorderLayout.SOUTH);
-		frame.getContentPane().add(menu);
 		frame.applyComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		frame.setSize(650, 600);
 		frame.setVisible(true);
@@ -58,13 +54,60 @@ public class StartMenu {
 	}
 
 	/**
-	 *  Pauses the game and brings up the main menu once again
+	 *  Pauses the game and brings up the pause menu
 	 */
 	public void pause() {
-		menu.setVisible(true);
+		frame.getContentPane().add(pause);
 		game.setVisible(false);
+		pause.setVisible(true);
 	}
+	
+	/**
+	 *  Resumes the game and takes you back to the game
+	 */
+	public void resume() {
+		pause.setVisible(false);
+		game.setVisible(true);
+	}
+	
+	/**
+	 *  creates a Pause menu for when you want to pause the game
+	 */
+	public void createPausePanel(){
+		pause = new JPanel(new GridLayout(3,0));
+		newGamePause = new JButton("New Game");
+		helpPause = new JButton("Help");
+		resume = new JButton("Resume");
+		addActionListener(newGamePause, "New Game");
+		addActionListener(helpPause, "Help");
+		addActionListener(resume, "Resume");
+		pause.setPreferredSize(new Dimension(650, 600));
+		pause.add(resume);
+		pause.add(newGamePause);
+		pause.add(helpPause);
+		frame.getContentPane().add(pause);
+	}
+	
+	/**
+	 *  Creates the main menu, the menu when you launch the application
+	 */
+	public void createMainMenu(){
+		menu = new JPanel(new GridLayout(2,0));
 
+		newGame = new JButton("New Game");
+		help = new JButton("Help");
+
+		addActionListener(newGame, "New Game");
+		addActionListener(help, "Help");
+
+
+		menu.setPreferredSize(new Dimension(650, 600));
+		menu.setBackground(Color.green);
+		menu.add(newGame);
+		menu.add(help);
+		frame.getContentPane().add(menu);	
+	}
+	
 	/**
 	 *  Allows the escape button to function as a pause key
 	 */
@@ -102,7 +145,7 @@ public class StartMenu {
 				button.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						// Execute when button is pressed
-						newGame();
+						pause();
 			}
 		});	
 	}
@@ -111,7 +154,7 @@ public class StartMenu {
 				button.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						// Execute when button is pressed
-						newGame();
+						resume();
 			}
 		});	
 	}
