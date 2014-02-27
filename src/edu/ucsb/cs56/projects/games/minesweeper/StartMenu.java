@@ -50,6 +50,7 @@ public class StartMenu {
 		MineComponent mc = new MineComponent(grid, m);
 		game.add(mc);
 		menu.setVisible(false);
+		pause.setVisible(false);
 		frame.getContentPane().add(game);
 	}
 
