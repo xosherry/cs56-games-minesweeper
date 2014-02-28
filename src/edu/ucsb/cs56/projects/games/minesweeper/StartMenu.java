@@ -150,7 +150,7 @@ public class StartMenu {
 				button.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						// Execute when button is pressed
-						pause();
+					    HelpScreen helpScreen=new HelpScreen(frame, menu);
 			}
 		});	
 	}
