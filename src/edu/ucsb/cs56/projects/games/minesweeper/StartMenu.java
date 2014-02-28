@@ -43,12 +43,16 @@ public class StartMenu {
 	public void newGame() {
 		game = new JPanel(new BorderLayout());
 		escapeListener();
-
+		JLabel jl= new JLabel("Press esc to pause game");
+		JPanel jp= new JPanel();
+		jp.setLayout(new BoxLayout(jp, BoxLayout.Y_AXIS));
 		Interface grid = new GUIGrid();
 		Messager m = new SOMessager();
-
+		
 		MineComponent mc = new MineComponent(grid, m);
-		game.add(mc);
+		jp.add(jl);
+		jp.add(mc);
+		game.add(jp);
 		menu.setVisible(false);
 		pause.setVisible(false);
 		frame.getContentPane().add(game);
