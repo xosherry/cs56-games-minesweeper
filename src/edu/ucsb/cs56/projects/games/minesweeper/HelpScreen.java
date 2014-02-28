@@ -14,30 +14,31 @@ public class HelpScreen {
     JPanel helpScreen;
     JButton backButton;
     JTextArea helpText;
+    JFrame temp;
+    JPanel otherMenu;
     
     public HelpScreen(JFrame frame, JPanel panel) {
-
+	this.temp = frame;
+	this.otherMenu = panel;
 	helpScreen = new JPanel(new GridLayout(2,0));
-	helpText = new JTextArea("stub");
+	helpText = new JTextArea("How to Play:\n1. Click on a space to reveal whether there is a mine or not.\n2. If there is no mine, there is a number shown. This number shows how many mines are touching this\n      square, including diagonals.\n3. If you know there is a mine in a spot, right click it. F symbolizes flag, letting you know there is a mine\n      there.\n4. The goal is to locate all the mines on the board.\n5. If you successfully locate all the mines, you win! If you trigger a mine, you lose.\n6. Have fun!");
 	backButton = new JButton("Back");
+	backButton.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+		    back();
+		}
+	    });
 	helpScreen.add(helpText);
 	helpScreen.add(backButton);
-	addActionListener(backButton, frame, panel);
 	helpScreen.setPreferredSize(new Dimension(650, 600));
 	frame.getContentPane().add(helpScreen);
 	helpScreen.setVisible(true);
 	panel.setVisible(false);
    }
-
-    public void addActionListener(JButton button, JFrame frame, JPanel panel){
-	frame.getContentPane().add(panel);
+    public void back(){
+	temp.getContentPane().add(otherMenu);
 	helpScreen.setVisible(false);
-	panel.setVisible(true);
+	otherMenu.setVisible(true);
     }
-
-
-
-
-
 
 }
