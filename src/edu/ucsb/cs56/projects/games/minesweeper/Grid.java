@@ -1,16 +1,17 @@
 package edu.ucsb.cs56.projects.games.minesweeper;
 
-public class GUIGrid implements Interface
+public class Grid
 {
 
     // instance variables
     private char[][] grid = new char[10][10];
     private char[][] map = new char[10][10];
-    
+    boolean isGUI;
     /**
      * Default constructor for objects of class GUIGrid
      */
-    public GUIGrid() {
+    public Grid(boolean isGUI) {
+	this.isGUI=isGUI;
 	setZero();
 	for(int i = 0; i < 10; i++){
 	    blankToMine();
@@ -42,6 +43,7 @@ public class GUIGrid implements Interface
 	int b = spotX%10;
 	if(grid[a][b] != 'X'){
 	    grid[a][b] = 'X';
+		if(isGUI == true)
 	    System.out.println(a*10+b);}
 	else
 	    blankToMine(); 

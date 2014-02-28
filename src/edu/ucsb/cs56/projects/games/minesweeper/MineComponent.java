@@ -22,7 +22,7 @@ import javax.swing.plaf.basic.BasicComboPopup;
  */
 public class MineComponent extends JComponent 
 {
-    private Interface game;
+    private Grid game;
     private Messager m;
     
 
@@ -40,7 +40,7 @@ public class MineComponent extends JComponent
 		   swing Widgets, or even to a web page, as needed.
     */
        
-    public MineComponent(Interface game, Messager m) {
+    public MineComponent(Grid game, Messager m) {
 	super(); // is this line necessary?  what does it do?
 	
 	this.game = game;  // the Interface game
@@ -94,7 +94,7 @@ public class MineComponent extends JComponent
 			for(int j=0; j<10; j++){
 			    JButton jb = buttons[i][j];
 			    if(game.getCell(i*10+j) != '?'){
-				jb.setFont(new Font("sansserif",Font.BOLD,36));
+				jb.setFont(new Font("sansserif",Font.BOLD,34));
 				jb.setText(Character.toString(game.getCell(i*10+j)));
 			    }
 			}
@@ -128,7 +128,7 @@ public class MineComponent extends JComponent
 		else if(!(game.isOpen(num))){
 		    game.flagBox(num);
 		    JButton jb = buttons[num/10][num%10];
-		    jb.setFont(new Font("sansserif",Font.BOLD,36));
+		    jb.setFont(new Font("sansserif",Font.BOLD,30));
 		    jb.setText("F"); 
 		}
 

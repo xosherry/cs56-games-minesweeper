@@ -12,7 +12,7 @@ public class GUIGame
 	int status = 0;
 	
 	// TicTacToeGrid implements TicTacToeGame
-	TextGrid g = new TextGrid();
+	Grid g = new Grid(false);
 	
 	while (!done) {
 	   System.out.println(g); // g.toString() implicitly invoked

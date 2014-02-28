@@ -46,7 +46,7 @@ public class StartMenu {
 		JLabel jl= new JLabel("Press esc to pause game");
 		JPanel jp= new JPanel();
 		jp.setLayout(new BoxLayout(jp, BoxLayout.Y_AXIS));
-		Interface grid = new GUIGrid();
+		Grid grid = new Grid(true);
 		Messager m = new SOMessager();
 		
 		MineComponent mc = new MineComponent(grid, m);
