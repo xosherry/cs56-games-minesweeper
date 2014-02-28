@@ -6,12 +6,13 @@ import java.awt.ComponentOrientation;
     System.out as the destination for messages.
 
      @author Daniel Reta
-     @version CS56, Spring 2012, UCSB
+	 @author David Acevedo
+     @version CS56, Winter 2014, UCSB
 */
 
 public class MineGUI {
 
-    /** main method to fire up a JFrame on the screen  
+    /** main method to fire up a StartMenu on the screen  
           @param args not used
      */
 

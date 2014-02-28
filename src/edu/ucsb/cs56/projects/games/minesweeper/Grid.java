@@ -1,5 +1,12 @@
 package edu.ucsb.cs56.projects.games.minesweeper;
 
+/** The Grid class is the foundation for minesweeper, applies mine locations, checks if something is open,
+	makes flags functional, etc.
+	@author Unknown
+    @author David Acevedo
+    @version 2014/02/28 for project1, cs56, W14
+
+*/
 public class Grid
 {
 
@@ -19,6 +26,13 @@ public class Grid
 	insertNums();
 	mapMaker(map);
     }
+	
+	/**
+	 *	Getter for isGUI
+	 */
+	public boolean getIsGUI(){
+		return isGUI;
+		}
 
     /**
      * Sets all cells in the grid to zero.

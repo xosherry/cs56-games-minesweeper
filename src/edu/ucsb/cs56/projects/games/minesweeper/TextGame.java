@@ -2,6 +2,14 @@ package edu.ucsb.cs56.projects.games.minesweeper;
 
 import java.util.Scanner;
 
+/** Makes the game on the terminal functional
+
+	@author Unknown
+    @author David Acevedo
+    @version 2014/02/28 for project1, cs56, W14
+    @see Grid
+
+*/
 public class TextGame
 {
     

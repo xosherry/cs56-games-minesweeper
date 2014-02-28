@@ -17,14 +17,15 @@ import javax.swing.plaf.basic.BasicComboPopup;
  * An Swing component for playing MineSweeper
 
    @author Daniel Reta
-   @version CS56 Spring 2012
-   @see GUIGrid
+   @author @David Acevedo
+   @version CS56 Winter 2014
+   @see Grid
  */
 public class MineComponent extends JComponent 
 {
     private Grid game;
     private Messager m;
-    private int status = 0;
+    private int status = 0; //allows the StartMenu class to know when the game is done
 	StartMenu start;
 
     private JButton[][] buttons = new JButton[10][10];
@@ -39,6 +40,8 @@ public class MineComponent extends JComponent
 		   Making this separate allows a user of this components to decide to
 		   send those messages to the console, or to a variety of different
 		   swing Widgets, or even to a web page, as needed.
+	@param start a StartMenu object so we can use the MineComponent class to modify the 
+			GUI on the JFrame
     */
        
     public MineComponent(Grid game, Messager m, StartMenu start) {

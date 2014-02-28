@@ -10,6 +10,7 @@ import javax.swing.*;
 
      @author David Acevedo
      @version CS56, Winter 2014, UCSB
+	 @see MineGUI
 */
 
 public class StartMenu {
