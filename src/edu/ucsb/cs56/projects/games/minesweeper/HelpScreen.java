@@ -15,16 +15,18 @@ public class HelpScreen {
     JButton backButton;
     JTextArea helpText;
     
-    public void HelpScreen(JFrame frame, JPanel panel) {
+    public HelpScreen(JFrame frame, JPanel panel) {
 
 	helpScreen = new JPanel(new GridLayout(2,0));
 	helpText = new JTextArea("stub");
 	backButton = new JButton("Back");
+	helpScreen.add(helpText);
+	helpScreen.add(backButton);
 	addActionListener(backButton, frame, panel);
 	helpScreen.setPreferredSize(new Dimension(650, 600));
 	frame.getContentPane().add(helpScreen);
 	helpScreen.setVisible(true);
-	helpScreen.setVisible(false);
+	panel.setVisible(false);
    }
 
     public void addActionListener(JButton button, JFrame frame, JPanel panel){
