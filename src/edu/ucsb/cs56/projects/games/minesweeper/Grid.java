@@ -6,7 +6,7 @@ public class Grid
     // instance variables
     private char[][] grid = new char[10][10];
     private char[][] map = new char[10][10];
-    boolean isGUI;
+    private boolean isGUI;
     /**
      * Default constructor for objects of class GUIGrid
      */
@@ -44,7 +44,7 @@ public class Grid
 	if(grid[a][b] != 'X'){
 	    grid[a][b] = 'X';
 		if(isGUI == true)
-	    System.out.println(a*10+b);}
+			System.out.println(a*10+b);}
 	else
 	    blankToMine(); 
 	return;

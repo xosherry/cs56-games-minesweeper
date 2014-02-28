@@ -24,7 +24,8 @@ public class MineComponent extends JComponent
 {
     private Grid game;
     private Messager m;
-    
+    private int status = 0;
+	StartMenu start;
 
     private JButton[][] buttons = new JButton[10][10];
 
@@ -40,8 +41,9 @@ public class MineComponent extends JComponent
 		   swing Widgets, or even to a web page, as needed.
     */
        
-    public MineComponent(Grid game, Messager m) {
+    public MineComponent(Grid game, Messager m, StartMenu start) {
 	super(); // is this line necessary?  what does it do?
+	this.start=start;
 	
 	this.game = game;  // the Interface game
 	this.m = m;  // a place we can write messages to
@@ -84,7 +86,7 @@ public class MineComponent extends JComponent
 
 	 */
 
-	int status = 0;
+	//status = 0;
 
 	public void mouseReleased(MouseEvent event) {
 	    if(game.gameStatus(status) == 0){
@@ -104,9 +106,11 @@ public class MineComponent extends JComponent
 
 		if (status == -1){
 		    m.append("You lose!!\n");
+			start.setLabel("You lose!!! Press esc to start a New Game");
 		}
 		else if (status == 1){
 		    m.append("You win!!\n");
+			start.setLabel("You win!!! Press esc to start a New Game");
 		}
 		
 	    }
@@ -135,12 +139,17 @@ public class MineComponent extends JComponent
 		int status = game.gameStatus(0);
 
 		if (status == 1){
+			
 		    m.append("You win!!\n");
+			start.setLabel("You win!!! Press esc to start a New Game");
 		}
 	    }
 	    }
 	}
 	
     }
+	int getStatus(){
+		return status;
+	}
 }
 
