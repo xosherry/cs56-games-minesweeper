@@ -1,4 +1,4 @@
-package edu.ucsb.cs56.S12.dreta.Mine;
+package edu.ucsb.cs56.projects.games.minesweeper;
 import java.awt.GridLayout;
 import javax.swing.JComponent;
 import javax.swing.JButton;
@@ -17,14 +17,16 @@ import javax.swing.plaf.basic.BasicComboPopup;
  * An Swing component for playing MineSweeper
 
    @author Daniel Reta
-   @version CS56 Spring 2012
-   @see GUIGrid
+   @author @David Acevedo
+   @version CS56 Winter 2014
+   @see Grid
  */
 public class MineComponent extends JComponent 
 {
-    private Interface game;
+    private Grid game;
     private Messager m;
-    
+    private int status = 0; //allows the StartMenu class to know when the game is done
+	StartMenu start;
 
     private JButton[][] buttons = new JButton[10][10];
 
@@ -38,10 +40,13 @@ public class MineComponent extends JComponent
 		   Making this separate allows a user of this components to decide to
 		   send those messages to the console, or to a variety of different
 		   swing Widgets, or even to a web page, as needed.
+	@param start a StartMenu object so we can use the MineComponent class to modify the 
+			GUI on the JFrame
     */
        
-    public MineComponent(Interface game, Messager m) {
+    public MineComponent(Grid game, Messager m, StartMenu start) {
 	super(); // is this line necessary?  what does it do?
+	this.start=start;
 	
 	this.game = game;  // the Interface game
 	this.m = m;  // a place we can write messages to
@@ -84,7 +89,7 @@ public class MineComponent extends JComponent
 
 	 */
 
-	int status = 0;
+	//status = 0;
 
 	public void mouseReleased(MouseEvent event) {
 	    if(game.gameStatus(status) == 0){
@@ -94,7 +99,7 @@ public class MineComponent extends JComponent
 			for(int j=0; j<10; j++){
 			    JButton jb = buttons[i][j];
 			    if(game.getCell(i*10+j) != '?'){
-				jb.setFont(new Font("sansserif",Font.BOLD,36));
+				jb.setFont(new Font("sansserif",Font.BOLD,34));
 				jb.setText(Character.toString(game.getCell(i*10+j)));
 			    }
 			}
@@ -104,9 +109,11 @@ public class MineComponent extends JComponent
 
 		if (status == -1){
 		    m.append("You lose!!\n");
+			start.setLabel("You lose!!! Press esc to start a New Game");
 		}
 		else if (status == 1){
 		    m.append("You win!!\n");
+			start.setLabel("You win!!! Press esc to start a New Game");
 		}
 		
 	    }
@@ -128,19 +135,24 @@ public class MineComponent extends JComponent
 		else if(!(game.isOpen(num))){
 		    game.flagBox(num);
 		    JButton jb = buttons[num/10][num%10];
-		    jb.setFont(new Font("sansserif",Font.BOLD,36));
+		    jb.setFont(new Font("sansserif",Font.BOLD,30));
 		    jb.setText("F"); 
 		}
 
 		int status = game.gameStatus(0);
 
 		if (status == 1){
+			
 		    m.append("You win!!\n");
+			start.setLabel("You win!!! Press esc to start a New Game");
 		}
 	    }
 	    }
 	}
 	
     }
+	int getStatus(){
+		return status;
+	}
 }
 

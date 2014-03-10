@@ -1,4 +1,4 @@
-package edu.ucsb.cs56.S12.dreta.Mine;
+package edu.ucsb.cs56.projects.games.minesweeper;
 /**
    An exception for illegal moves in MineSweeper, used in GUIGrid
    (its an unchecked exception, so it extends  RuntimeException rather than Exception)

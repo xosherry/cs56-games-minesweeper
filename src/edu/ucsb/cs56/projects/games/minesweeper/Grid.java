@@ -1,16 +1,24 @@
-package edu.ucsb.cs56.S12.dreta.Mine;
+package edu.ucsb.cs56.projects.games.minesweeper;
 
-public class GUIGrid implements Interface
+/** The Grid class is the foundation for minesweeper, applies mine locations, checks if something is open,
+	makes flags functional, etc.
+	@author Unknown
+    @author David Acevedo
+    @version 2014/02/28 for project1, cs56, W14
+
+*/
+public class Grid
 {
 
     // instance variables
     private char[][] grid = new char[10][10];
     private char[][] map = new char[10][10];
-    
+    private boolean isGUI;
     /**
      * Default constructor for objects of class GUIGrid
      */
-    public GUIGrid() {
+    public Grid(boolean isGUI) {
+	this.isGUI=isGUI;
 	setZero();
 	for(int i = 0; i < 10; i++){
 	    blankToMine();
@@ -18,6 +26,13 @@ public class GUIGrid implements Interface
 	insertNums();
 	mapMaker(map);
     }
+	
+	/**
+	 *	Getter for isGUI
+	 */
+	public boolean getIsGUI(){
+		return isGUI;
+		}
 
     /**
      * Sets all cells in the grid to zero.
@@ -42,7 +57,8 @@ public class GUIGrid implements Interface
 	int b = spotX%10;
 	if(grid[a][b] != 'X'){
 	    grid[a][b] = 'X';
-	    System.out.println(a*10+b);}
+		if(isGUI == true)
+			System.out.println(a*10+b);}
 	else
 	    blankToMine(); 
 	return;

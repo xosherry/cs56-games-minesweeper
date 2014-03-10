@@ -1,7 +1,15 @@
-package edu.ucsb.cs56.S12.dreta.Mine;
+package edu.ucsb.cs56.projects.games.minesweeper;
 
 import java.util.Scanner;
 
+/** Makes the game on the terminal functional
+
+	@author Unknown
+    @author David Acevedo
+    @version 2014/02/28 for project1, cs56, W14
+    @see Grid
+
+*/
 public class GUIGame
 {
     
@@ -12,7 +20,7 @@ public class GUIGame
 	int status = 0;
 	
 	// TicTacToeGrid implements TicTacToeGame
-	TextGrid g = new TextGrid();
+	Grid g = new Grid(false);
 	
 	while (!done) {
 	   System.out.println(g); // g.toString() implicitly invoked
