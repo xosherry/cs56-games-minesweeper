@@ -6,6 +6,12 @@ Migrated from: https://foo.cs.ucsb.edu/56mantis/view.php?id=0000900 by http://gi
 
 Code prior to W14: https://foo.cs.ucsb.edu/cs56/issues/0000900/
 
+project history
+===============
+```
+ W14 | andrewberls 4pm | jgee67, davidacevedo | (pconrad) Minesweeper game
+```
+
 
 ==============================================================================
 High-level description
