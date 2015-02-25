@@ -121,13 +121,13 @@ public class MineComponent extends JComponent
 
 		if (status == -1){
 		    JOptionPane.showMessageDialog(MineComponent.this, "You lose! Press esc to start a new game.");
-		    /*m.append("You lose!!\n");
-			start.setLabel("You lose!!! Press esc to start a New Game");*/
+		    m.append("You lose!!\n");
+			start.setLabel("You lose!!! Press esc to start a New Game");
 		}
 		else if (status == 1){
 		    JOptionPane.showMessageDialog(MineComponent.this, "You win!! Press esc to start a new game.");
-		    /*m.append("You win!!\n");
-			start.setLabel("You win!!! Press esc to start a New Game");*/
+		    m.append("You win!!\n");
+			start.setLabel("You win!!! Press esc to start a New Game");
 		}
 		
 	    }
