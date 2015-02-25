@@ -5,6 +5,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event. ActionEvent;
 import java.awt.Font;
+import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.JTextArea;
 import java.awt.event.MouseAdapter;
@@ -62,6 +63,7 @@ public class MineComponent extends JComponent
 		buttons[i][j] = jb;
 		jb.addMouseListener(new ButtonListener(i*10+j));
 		jb.setFont(new Font("sansserif",Font.BOLD,12));
+		jb.setText(" ");
 		this.add(jb);
 	    }
 	}
@@ -100,6 +102,10 @@ public class MineComponent extends JComponent
 			    JButton jb = buttons[i][j];
 			    if(game.getCell(i*10+j) != '?'){
 				jb.setFont(new Font("sansserif",Font.BOLD,34));
+				if (game.getCell(i*10+j) == 0)
+				    jb.setForeground(Color.BLUE);
+				else
+				    jb.setForeground(Color.BLACK);
 				jb.setText(Character.toString(game.getCell(i*10+j)));
 			    }
 			}
@@ -122,20 +128,15 @@ public class MineComponent extends JComponent
 		if(game.isFlag(num)){
 		    game.deflagBox(num);
 		    JButton jb = buttons[num/10][num%10];
-		    int digit1 = num%10;
-		    int digit2 = num/10;
-		    char c1 = (char)(digit1 + 48);
-		    char c2 = (char)(digit2 + 48);
-		    String s1 = Character.toString(c1);
-		    String s2 = Character.toString(c2);
-		    String s = s1 + s2;
 		    jb.setFont(new Font("sansserif",Font.BOLD,12));
-		    jb.setText(s); 
+		    jb.setForeground(Color.BLACK);
+		    jb.setText(" "); 
 		}	    
 		else if(!(game.isOpen(num))){
 		    game.flagBox(num);
 		    JButton jb = buttons[num/10][num%10];
 		    jb.setFont(new Font("sansserif",Font.BOLD,30));
+		    jb.setForeground(Color.RED);
 		    jb.setText("F"); 
 		}
 
