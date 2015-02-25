@@ -28,6 +28,8 @@ public class MineComponent extends JComponent
     private Messager m;
     private int status = 0; //allows the StartMenu class to know when the game is done
 	StartMenu start;
+    private Color zero = new Color (0, 0, 128);
+    private Color number = new Color (0, 100, 0);
 
     private JButton[][] buttons = new JButton[10][10];
 
@@ -63,7 +65,7 @@ public class MineComponent extends JComponent
 		buttons[i][j] = jb;
 		jb.addMouseListener(new ButtonListener(i*10+j));
 		jb.setFont(new Font("sansserif",Font.BOLD,12));
-		jb.setText(" ");
+		jb.setText("");
 		this.add(jb);
 	    }
 	}
@@ -102,10 +104,14 @@ public class MineComponent extends JComponent
 			    JButton jb = buttons[i][j];
 			    if(game.getCell(i*10+j) != '?'){
 				jb.setFont(new Font("sansserif",Font.BOLD,34));
-				if (game.getCell(i*10+j) == 0)
-				    jb.setForeground(Color.BLUE);
-				else
+				if (game.getCell(i*10+j) == 48)
+				    jb.setForeground(zero);
+				else if (game.getCell(i*10+j) == 70)
+				    jb.setForeground(Color.RED);
+				else if (game.getCell(i*10+j) == 88)
 				    jb.setForeground(Color.BLACK);
+				else
+				    jb.setForeground(number);
 				jb.setText(Character.toString(game.getCell(i*10+j)));
 			    }
 			}
@@ -130,7 +136,7 @@ public class MineComponent extends JComponent
 		    JButton jb = buttons[num/10][num%10];
 		    jb.setFont(new Font("sansserif",Font.BOLD,12));
 		    jb.setForeground(Color.BLACK);
-		    jb.setText(" "); 
+		    jb.setText(""); 
 		}	    
 		else if(!(game.isOpen(num))){
 		    game.flagBox(num);
