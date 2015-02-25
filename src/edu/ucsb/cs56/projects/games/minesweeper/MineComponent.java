@@ -2,6 +2,7 @@ package edu.ucsb.cs56.projects.games.minesweeper;
 import java.awt.GridLayout;
 import javax.swing.JComponent;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import java.awt.event.ActionListener;
 import java.awt.event. ActionEvent;
 import java.awt.Font;
@@ -70,8 +71,7 @@ public class MineComponent extends JComponent
 	    }
 	}
 	
-    }    
- 
+    }
 
     /**
      * Inner Class, responds to the event source.
@@ -120,12 +120,14 @@ public class MineComponent extends JComponent
 		status = game.gameStatus(status);
 
 		if (status == -1){
-		    m.append("You lose!!\n");
-			start.setLabel("You lose!!! Press esc to start a New Game");
+		    JOptionPane.showMessageDialog(MineComponent.this, "You lose! Press esc to start a new game.");
+		    /*m.append("You lose!!\n");
+			start.setLabel("You lose!!! Press esc to start a New Game");*/
 		}
 		else if (status == 1){
-		    m.append("You win!!\n");
-			start.setLabel("You win!!! Press esc to start a New Game");
+		    JOptionPane.showMessageDialog(MineComponent.this, "You win!! Press esc to start a new game.");
+		    /*m.append("You win!!\n");
+			start.setLabel("You win!!! Press esc to start a New Game");*/
 		}
 		
 	    }
