@@ -22,7 +22,9 @@ public class GridTest {
 	 */
 	@Test
 	public void test_Grid(){
-	Grid g1 = new Grid(true);
+	Grid g1 = new Grid(true, 0);	
+	Grid g2 = new Grid(true, 1);	
+	Grid g3 = new Grid(true, 2);
 	assertEquals(true,g1.getIsGUI());
 	}
 	
