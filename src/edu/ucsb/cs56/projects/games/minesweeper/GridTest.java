@@ -8,7 +8,7 @@ import static org.junit.Assert.assertFalse;
 /** Test class for Grid
 
     @author David Acevedo
-    @version 2014/02/28 for project1, cs56, W14
+    @version 2015/03/04 for lab07, cs56, W15
     @see Grid
 
 */

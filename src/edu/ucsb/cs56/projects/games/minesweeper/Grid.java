@@ -2,16 +2,16 @@ package edu.ucsb.cs56.projects.games.minesweeper;
 
 /** The Grid class is the foundation for minesweeper, applies mine locations, checks if something is open,
 	makes flags functional, etc.
-	@author Unknown
+	@author Caleb Nelson
     @author David Acevedo
-    @version 2014/02/28 for project1, cs56, W14
+    @version 2015/03/04 for lab07, cs56, W15
 
 */
 public class Grid
 {
     final int EASY_SIZE = 10;
-    final int MED_SIZE = 20;
-    final int HARD_SIZE = 30;
+    final int MED_SIZE = 15;
+    final int HARD_SIZE = 20;
 
     // instance variables
     private int size;
@@ -47,13 +47,29 @@ public class Grid
 			size = HARD_SIZE;
 			break;
 		default:
-			throw new IllegalArgumentException("Difficulty needs to be a number between 0 and 2 inclusive.");
+			throw new IllegalArgumentException("Difficulty needs to be an integer between 0 and 2 inclusive.");
 	}
 	grid = new char[size][size];
 	map = new char[size][size];
 	setZero();
-	for(int i = 0; i < size; i++){
-	    blankToMine();
+	switch (difficulty){
+		case 0:
+			for(int i = 0; i < size; i++){
+	    		blankToMine();
+			}
+			break;
+		case 1:
+			for(int i = 0; i < 2*size; i++){
+	    		blankToMine();
+			}
+			break;
+		case 2:
+			for(int i = 0; i < 3*size; i++){
+	    		blankToMine();
+			}
+			break;
+		default:
+			throw new IllegalArgumentException("Difficulty needs to be an integer between 0 and 2 inclusive.");
 	}
 	insertNums();
 	mapMaker(map);
@@ -64,7 +80,14 @@ public class Grid
 	 */
 	public boolean getIsGUI(){
 		return isGUI;
-		}
+	}
+
+	/**
+	 *	Getter for size
+	 */
+	public int getSize(){
+		return size;
+	}
 
     /**
      * Sets all cells in the grid to zero.
