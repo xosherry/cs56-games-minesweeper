@@ -29,8 +29,8 @@ public class MineComponent extends JComponent
     private Grid game;
     private Messager m;
     private int size;
-    private int status = 0; //allows the StartMenu class to know when the game is done
-	StartMenu start;
+    private int status = 0; //allows the MineGUI class to know when the game is done
+	MineGUI start;
     private Color zero = new Color (0, 0, 128);
     private Color number = new Color (0, 100, 0);
     private JButton[][] buttons;
@@ -45,11 +45,11 @@ public class MineComponent extends JComponent
 		   Making this separate allows a user of this components to decide to
 		   send those messages to the console, or to a variety of different
 		   swing Widgets, or even to a web page, as needed.
-	@param start a StartMenu object so we can use the MineComponent class to modify the 
+	@param start a MineGUI object so we can use the MineComponent class to modify the 
 			GUI on the JFrame
     */
        
-    public MineComponent(Grid game, Messager m, StartMenu start) {
+    public MineComponent(Grid game, Messager m, MineGUI start) {
 	super(); // is this line necessary?  what does it do?
 	this.start=start;
 	
