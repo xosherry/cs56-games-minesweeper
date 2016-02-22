@@ -52,8 +52,8 @@ public class MineGUI {
 		escapeListener();								//listens for the esc button
 		status= new JLabel("Press esc to pause game"); //Our good label
 		Grid grid = new Grid(true);
-		Messager m = new SOMessager();			
-		mc = new MineComponent(grid, m, this);	//creates our game interface
+		//Messager m = new SOMessager();			
+		mc = new MineComponent(grid, this);	//creates our game interface
 		frame.setSize((65*mc.getGrid().getSize() > screenSize.width
 						? screenSize.width : 65*mc.getGrid().getSize()),
 					  (60*mc.getGrid().getSize() > screenSize.height-40
@@ -72,8 +72,8 @@ public class MineGUI {
 		escapeListener();								//listens for the esc button
 		status= new JLabel("Press esc to pause game"); //Our good label
 		Grid grid = new Grid(true, difficulty);
-		Messager m = new SOMessager();			
-		mc = new MineComponent(grid, m, this);	//creates our game interface
+		//Messager m = new SOMessager();			
+		mc = new MineComponent(grid, this);	//creates our game interface
 		frame.setSize((65*mc.getGrid().getSize() > screenSize.width
 						? screenSize.width : 65*mc.getGrid().getSize()),
 					  (60*mc.getGrid().getSize() > screenSize.height-30
