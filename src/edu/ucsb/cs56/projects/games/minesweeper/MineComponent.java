@@ -159,6 +159,8 @@ public class MineComponent extends JComponent
 	    		catch (LineUnavailableException e) {
 	    			e.printStackTrace();
 	    		}
+	    		refresh();
+	    		/*
 	    		for(int i=0; i< size; i++){
 	    			for(int j=0; j< size; j++){
 	    				JButton jb = buttons[i][j];
@@ -178,6 +180,7 @@ public class MineComponent extends JComponent
 	    				}
 	    			}
 	    		}
+	    		*/
 
 	    		status = game.gameStatus(status);
 	    		if (status == -1){
@@ -226,6 +229,27 @@ public class MineComponent extends JComponent
 	    }
 	}
 	
+    }
+    public void refresh(){
+		for(int i=0; i< size; i++){
+			for(int j=0; j< size; j++){
+				JButton jb = buttons[i][j];
+				if(game.getCell(i*size+j) != '?'){
+					jb.setFont(new Font("sansserif",Font.BOLD,
+							jb.getSize().height/2));
+					if (game.getCell(i*size+j) == 48)
+						jb.setForeground(zero);
+					else if (game.getCell(i*size+j) == 70)
+						jb.setForeground(Color.RED);
+					else if (game.getCell(i*size+j) == 88)
+						jb.setForeground(Color.BLACK);
+					else
+						jb.setForeground(number);
+					
+					jb.setText(Character.toString(game.getCell(i*size+j)));
+				}
+			}
+		}
     }
 	int getStatus(){
 		return status;
