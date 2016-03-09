@@ -39,3 +39,7 @@ How to Run
 
 To run the GuiGame, use "ant mine".
 To run the TextGame, use "ant textmine".
+==============================================================================
+W16 Final Remarks
+=============================================================================
+Code is boarderline spaghetti at this point so when reading through it think of what it should do rather than what it might do.   
