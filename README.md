@@ -42,4 +42,4 @@ To run the TextGame, use "ant textmine".
 ==============================================================================
 W16 Final Remarks
 =============================================================================
-Code is boarderline spaghetti at this point so when reading through it think of what it should do rather than what it might do.   
+The coding style was not what I was accustom to so when I was reading through the code, I tabbed and rearranged stuff just so I could read it, however I didn't do that for all the code so beware there are atleast 2 styles here.   
