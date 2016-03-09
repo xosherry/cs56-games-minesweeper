@@ -9,7 +9,7 @@ Code prior to W14: https://foo.cs.ucsb.edu/cs56/issues/0000900/
 project history
 ===============
 ```
- W14 | calebnelson | andrewberls 4pm | jgee67, davidacevedo | (pconrad) Minesweeper game
+W16 Athielk 4pm | athielk | W14 | calebnelson | andrewberls 4pm | jgee67, davidacevedo | (pconrad) Minesweeper game
 ```
 
 
