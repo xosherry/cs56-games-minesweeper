@@ -9,7 +9,7 @@ Code prior to W14: https://foo.cs.ucsb.edu/cs56/issues/0000900/
 project history
 ===============
 ```
- W14 | calebnelson | andrewberls 4pm | jgee67, davidacevedo | (pconrad) Minesweeper game
+W16 Athielk 4pm | athielk | W14 | calebnelson | andrewberls 4pm | jgee67, davidacevedo | (pconrad) Minesweeper game
 ```
 
 
@@ -39,3 +39,7 @@ How to Run
 
 To run the GuiGame, use "ant mine".
 To run the TextGame, use "ant textmine".
+==============================================================================
+W16 Final Remarks
+=============================================================================
+The coding style was not what I was accustom to so when I was reading through the code, I tabbed and rearranged stuff just so I could read it, however I didn't do that for all the code so beware there are atleast 2 styles here.   

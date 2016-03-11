@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event. ActionEvent;
+import java.awt.event.ActionEvent;
 import java.awt.Font;
 import java.awt.Color;
 import java.util.ArrayList;
@@ -100,9 +100,13 @@ public class MineComponent extends JComponent
 
 		@Override
 		public void componentResized(ComponentEvent e) {
+			int size=e.getComponent().getSize().height;
+			if (e.getComponent().getSize().height>e.getComponent().getSize().width){
+				size=e.getComponent().getSize().width
+			}
 			e.getComponent().setFont(new Font("sansserif",
 					Font.BOLD,
-					e.getComponent().getSize().height/2));
+					size/2));
 			
 			
 		}
@@ -235,8 +239,12 @@ public class MineComponent extends JComponent
 			for(int j=0; j< size; j++){
 				JButton jb = buttons[i][j];
 				if(game.getCell(i*size+j) != '?'){
+					int size=e.getComponent().getSize().height;
+					if (e.getComponent().getSize().height>e.getComponent().getSize().width){
+						size=e.getComponent().getSize().width
+					}
 					jb.setFont(new Font("sansserif",Font.BOLD,
-							jb.getSize().height/2));
+						size/2));
 					if (game.getCell(i*size+j) == 48)
 						jb.setForeground(zero);
 					else if (game.getCell(i*size+j) == 70)
