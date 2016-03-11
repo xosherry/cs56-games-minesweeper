@@ -102,7 +102,7 @@ public class MineComponent extends JComponent
 		public void componentResized(ComponentEvent e) {
 			int size=e.getComponent().getSize().height;
 			if (e.getComponent().getSize().height>e.getComponent().getSize().width){
-				size=e.getComponent().getSize().width
+			    size=e.getComponent().getSize().width;
 			}
 			e.getComponent().setFont(new Font("sansserif",
 					Font.BOLD,
@@ -239,9 +239,9 @@ public class MineComponent extends JComponent
 			for(int j=0; j< size; j++){
 				JButton jb = buttons[i][j];
 				if(game.getCell(i*size+j) != '?'){
-					int size=e.getComponent().getSize().height;
-					if (e.getComponent().getSize().height>e.getComponent().getSize().width){
-						size=e.getComponent().getSize().width
+					int size=jb.getSize().height;
+					if (jb.getSize().height>jb.getSize().width){
+					    size=jb.getSize().width;
 					}
 					jb.setFont(new Font("sansserif",Font.BOLD,
 						size/2));
