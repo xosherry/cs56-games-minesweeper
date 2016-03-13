@@ -1,5 +1,7 @@
 package edu.ucsb.cs56.projects.games.minesweeper;
 
+import java.io.Serializable;
+
 /** The Grid class is the foundation for minesweeper, applies mine locations, checks if something is open,
 	makes flags functional, etc.
 	@author Caleb Nelson
@@ -7,9 +9,9 @@ package edu.ucsb.cs56.projects.games.minesweeper;
     @version 2015/03/04 for lab07, cs56, W15
 
 */
-public class Grid
-{
-    final int EASY_SIZE = 10;
+public class Grid implements Serializable{
+    
+	final int EASY_SIZE = 10;
     final int MED_SIZE = 15;
     final int HARD_SIZE = 20;
 
@@ -229,18 +231,19 @@ public class Grid
     }
 
     /**
-     * Opens the cell
+     * Opens the cell and returns what will be placed there
      */
 
-    public void searchBox(int box){ 
+    public char searchBox(int box){ 
+    	char spot='e';
 	if(box >= 0 && box < (size*size)){
-	    char spot = grid[box/size][box%size];
+	    spot = grid[box/size][box%size];
 	    if(isFlag(box)){
 		System.out.println("You cannot search a flaged box!");
 	    }
-	    else if(isMine(box)){ //opens a box that has a mine
-		map[box/size][box%size] = 'X';
-	    }
+	    //else if(isMine(box)){ //opens a box that has a mine
+		//map[box/size][box%size] = 'X';
+	    //}
 	    else if(isOpen(box)){
 		System.out.println("You cannot search an opened box!");
 	    }
@@ -251,7 +254,7 @@ public class Grid
 		   map[box/size][box%size] =  spot;
 	    }	
 	}
-	return;
+	return spot;
     }
 
      /**
@@ -310,26 +313,23 @@ public class Grid
      */
 
     public int gameStatus(int stat){ 
-	if(stat == 0){ // runs only if player hasn't hit a mine
-	    int correctBoxes = 0;
-	    for(int i = 0; i < size;i++){
-		for(int j = 0; j < size; j++){
-		    if(( isMine(i*size+j) && isFlag(i*size+j))||(grid[i][j] == map[i][j]))
-			correctBoxes++; //the map has the correct move for that cell
-		}
-	    }
-	    if(correctBoxes == size*size) //all correct moves have been made
-		stat++;
-	}
-
-	for(int i = 0; i< size;i++){
-	    for(int j=0; j< size; j++){
-		if(map[i][j] == 'X')
-		    stat--;
-	    }
-	}
-    
-	
+    	if(stat == 0){ // runs only if player hasn't hit a mine
+    		int correctBoxes = 0;
+    		for(int i = 0; i < size;i++){
+    			for(int j = 0; j < size; j++){
+    				if(( isMine(i*size+j) && isFlag(i*size+j))||(grid[i][j] == map[i][j]))
+    					correctBoxes++; //the map has the correct move for that cell
+    				if (map[i][j]=='X'){
+    					stat=-1;
+    					break;
+    				}
+    			}
+    		}
+    		if(stat==0){
+    			if(correctBoxes == size*size) //all correct moves have been made
+    				stat=1;
+    		}
+    	}
 	return stat;
     }
 

@@ -1,9 +1,16 @@
 package edu.ucsb.cs56.projects.games.minesweeper;
 import java.awt.GridLayout;
 import javax.swing.JComponent;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event. ActionEvent;
 import java.awt.Font;
 import java.awt.Color;
@@ -11,6 +18,8 @@ import java.util.ArrayList;
 import javax.swing.JTextArea;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
 import java.awt.Component;
 import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicComboPopup;
@@ -21,13 +30,13 @@ import javax.swing.plaf.basic.BasicComboPopup;
    @author Daniel Reta
    @author David Acevedo
    @author Caleb Nelson
-   @version 2015/03/04 for lab07, cs56, W15
+   @author Alex Thielk
+   @version 2016/02/019 for lab07, cs56, W16
    @see Grid
  */
 public class MineComponent extends JComponent 
 {
     private Grid game;
-    private Messager m;
     private int size;
     private int status = 0; //allows the MineGUI class to know when the game is done
 	MineGUI start;
@@ -49,12 +58,11 @@ public class MineComponent extends JComponent
 			GUI on the JFrame
     */
        
-    public MineComponent(Grid game, Messager m, MineGUI start) {
+    public MineComponent(Grid game, MineGUI start) {
 	super(); // is this line necessary?  what does it do?
 	this.start=start;
 	
 	this.game = game;  // the Interface game
-	this.m = m;  // a place we can write messages to
 	this.size = game.getSize();
 	buttons = new JButton[size][size];
 
@@ -68,20 +76,53 @@ public class MineComponent extends JComponent
 		JButton jb = new JButton(label);
 		buttons[i][j] = jb;
 		jb.addMouseListener(new ButtonListener(i* this.size +j));
-		jb.setFont(new Font("sansserif",Font.BOLD,12));
+		jb.setFont(new Font("sansserif",Font.BOLD,10));
 		jb.setText("");
+		jb.addComponentListener(new sizeListener());
 		this.add(jb);
 	    }
 	}
 	
     }
+    /**
+     * inner class, reponds to resizing of component to resize font
+     *
+     */
+    class sizeListener implements ComponentListener{
 
+		@Override
+		public void componentHidden(ComponentEvent arg0) {	
+		}
+
+		@Override
+		public void componentMoved(ComponentEvent e){
+		}
+
+		@Override
+		public void componentResized(ComponentEvent e) {
+			int size=e.getComponent().getSize().height/2;
+			if (e.getComponent().getSize().height/2>e.getComponent().getSize().width/4){
+			    size=e.getComponent().getSize().width/4;
+			}
+			e.getComponent().setFont(new Font("sansserif",
+					Font.BOLD,
+					size));
+			
+			
+		}
+
+		@Override
+		public void componentShown(ComponentEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+    	
+    }
     /**
      * Inner Class, responds to the event source.
     */
 
-    class ButtonListener extends MouseAdapter
-    {
+    class ButtonListener extends MouseAdapter{
 	private int num;
 
 	public ButtonListener(int i) {
@@ -99,69 +140,123 @@ public class MineComponent extends JComponent
 	//status = 0;
 
 	public void mouseReleased(MouseEvent event) {
+		Clip clip;
+		String soundName;  
+		AudioInputStream audioInputStream;
 	    if(game.gameStatus(status) == 0){
-		if(event.getButton() == MouseEvent.BUTTON1){
-		    game.searchBox(num);
-		    for(int i=0; i< size; i++){
-			for(int j=0; j< size; j++){
-			    JButton jb = buttons[i][j];
-			    if(game.getCell(i*size+j) != '?'){
-				jb.setFont(new Font("sansserif",Font.BOLD,34));
-				if (game.getCell(i*size+j) == 48)
-				    jb.setForeground(zero);
-				else if (game.getCell(i*size+j) == 70)
-				    jb.setForeground(Color.RED);
-				else if (game.getCell(i*size+j) == 88)
-				    jb.setForeground(Color.BLACK);
-				else
-				    jb.setForeground(number);
-				jb.setText(Character.toString(game.getCell(i*size+j)));
-			    }
-			}
-		    }
+	    	if(event.getButton() == MouseEvent.BUTTON1){
+	    		char box=game.searchBox(num);
+	    		if (box=='X'){
+	    			soundName= "resources/sounds/explosion.wav";
+	    		}
+	    		else{
+	    			soundName="resources/sounds/clicked.wav";
+	    		}
+	    		try {
+	    			audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());			clip = AudioSystem.getClip();
+	    			clip.open(audioInputStream);
+	    			clip.start();
+	    			} 
+	    		catch (UnsupportedAudioFileException | IOException e) {
+	    			e.printStackTrace();
+	    		} 
+	    		catch (LineUnavailableException e) {
+	    			e.printStackTrace();
+	    		}
+	    		refresh();
+	    		/*
+	    		for(int i=0; i< size; i++){
+	    			for(int j=0; j< size; j++){
+	    				JButton jb = buttons[i][j];
+	    				if(game.getCell(i*size+j) != '?'){
+	    					jb.setFont(new Font("sansserif",Font.BOLD,
+	    							jb.getSize().height/2));
+	    					if (game.getCell(i*size+j) == 48)
+	    						jb.setForeground(zero);
+	    					else if (game.getCell(i*size+j) == 70)
+	    						jb.setForeground(Color.RED);
+	    					else if (game.getCell(i*size+j) == 88)
+	    						jb.setForeground(Color.BLACK);
+	    					else
+	    						jb.setForeground(number);
+	    					
+	    					jb.setText(Character.toString(game.getCell(i*size+j)));
+	    				}
+	    			}
+	    		}
+	    		*/
 
-		status = game.gameStatus(status);
-
-		if (status == -1){
-		    JOptionPane.showMessageDialog(MineComponent.this, "You lose! Press esc to start a new game.");
-		    m.append("You lose!!\n");
-			start.setLabel("You lose!!! Press esc to start a New Game");
-		}
-		else if (status == 1){
-		    JOptionPane.showMessageDialog(MineComponent.this, "You win!! Press esc to start a new game.");
-		    m.append("You win!!\n");
-			start.setLabel("You win!!! Press esc to start a New Game");
-		}
-		
-	    }
-
-	    else if(event.getButton() == MouseEvent.BUTTON3){
-		if(game.isFlag(num)){
-		    game.deflagBox(num);
-		    JButton jb = buttons[num/size][num%size];
-		    jb.setFont(new Font("sansserif",Font.BOLD,12));
-		    jb.setForeground(Color.BLACK);
-		    jb.setText(""); 
-		}	    
-		else if(!(game.isOpen(num))){
-		    game.flagBox(num);
-		    JButton jb = buttons[num/size][num%size];
-		    jb.setFont(new Font("sansserif",Font.BOLD,30));
-		    jb.setForeground(Color.RED);
-		    jb.setText("F"); 
-		}
-
-		int status = game.gameStatus(0);
-
-		if (status == 1){
-			
-		    m.append("You win!!\n");
-			start.setLabel("You win!!! Press esc to start a New Game");
-		}
-	    }
+	    		status = game.gameStatus(status);
+	    		if (status == -1){
+	    			JOptionPane.showMessageDialog(MineComponent.this, 
+	    					"You lose! Press esc to start a new game.");
+	    			System.out.println("You lose!!");
+	    			start.setLabel("You lose!!! Press esc to start a New Game");
+	    		}
+	    		else if (status == 1){
+	    			soundName= "resources/sounds/win.wav";
+	    			try {
+	    				audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());			clip = AudioSystem.getClip();
+	    				clip.open(audioInputStream);
+	    				clip.start();
+	    			} catch (UnsupportedAudioFileException | IOException e) {
+	    				e.printStackTrace();
+	    			} catch (LineUnavailableException e) {
+	    				e.printStackTrace();
+	    			}
+	    			JOptionPane.showMessageDialog(MineComponent.this, "You win!! Press esc to start a new game.");
+	    			System.out.println("You win!!\n");
+	    			start.setLabel("You win!!! Press esc to start a New Game");
+	    		}
+	    	}
+	    	else if(event.getButton() == MouseEvent.BUTTON3){
+	    		if(game.isFlag(num)){
+	    			game.deflagBox(num);
+	    			JButton jb = buttons[num/size][num%size];
+	    			//jb.setFont(new Font("sansserif",Font.BOLD,12));
+	    			jb.setForeground(Color.BLACK);
+	    			jb.setText(""); 
+	    		}	    
+	    		else if(!(game.isOpen(num))){
+	    			game.flagBox(num);
+	    			JButton jb = buttons[num/size][num%size];
+	    			jb.setFont(new Font("sansserif",Font.BOLD,30));
+	    			jb.setForeground(Color.RED);
+	    			jb.setText("F"); 
+	    		}
+	    		int status = game.gameStatus(0);
+	    		if (status == 1){		
+	    			System.out.println("You win!!\n");
+	    			start.setLabel("You win!!! Press esc to start a New Game");
+	    		}
+	    	}
 	    }
 	}
 	
+    }
+    public void refresh(){
+		for(int i=0; i< size; i++){
+			for(int j=0; j< size; j++){
+				JButton jb = buttons[i][j];
+				if(game.getCell(i*size+j) != '?'){
+					int fontSize=jb.getSize().height/2;
+					if (jb.getSize().height/2>jb.getSize().width/4){
+					    fontSize=jb.getSize().width/4;
+					}
+					jb.setFont(new Font("sansserif",Font.BOLD,fontSize));
+					if (game.getCell(i*size+j) == 48)
+						jb.setForeground(zero);
+					else if (game.getCell(i*size+j) == 70)
+						jb.setForeground(Color.RED);
+					else if (game.getCell(i*size+j) == 88)
+						jb.setForeground(Color.BLACK);
+					else
+						jb.setForeground(number);
+					
+					jb.setText(Character.toString(game.getCell(i*size+j)));
+				}
+			}
+		}
     }
 	int getStatus(){
 		return status;
