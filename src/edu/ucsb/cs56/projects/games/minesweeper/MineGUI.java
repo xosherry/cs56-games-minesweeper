@@ -39,7 +39,10 @@ public class MineGUI {
 	JPanel menu;	//Menu Panel, initial panel at initial creation of the game e.g. Main Menu
 	JPanel game; 	//Game Panel, where the game is played
 	//JPanel pause;	//Pause Menu JPanel, hopefully we can remove this after toolbar works.
-	boolean inUse; //if pause menu is started and in use
+	boolean inUse; //if game is started and in use
+    
+    //TODO: change all instantiations of menu and game to change the previous boolean
+    
 	MineComponent mc; //MineComponent is the actual layout of the game, and what makes the game function
 	//JLabel status;		//the game status label that is displayed during the game
 
@@ -49,7 +52,7 @@ public class MineGUI {
 	public MineGUI() {
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		createPausePanel();
+		//createPausePanel();
 		createMainMenu();
 
 		frame.applyComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -61,6 +64,7 @@ public class MineGUI {
 	 *  Starts a new Minesweeper game from the main menu
 	 */
 	public void newGame() {
+        
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		game = new JPanel(new BorderLayout());			//our game panel e.g. where everything will be put in for this display
 		//escapeListener();								//listens for the esc button
@@ -73,11 +77,13 @@ public class MineGUI {
 					  (60*mc.getGrid().getSize() > screenSize.height-40
 						? screenSize.height-40 : 60*mc.getGrid().getSize()));
 
-		game.add(mc);							//puts the game in the jPanel
+		createToolbar();
+        game.add(mc);							//puts the game in the jPanel
 		game.add(toolbar,BorderLayout.NORTH);	//puts the game toolbar at the top of the screen
 		menu.setVisible(false);					//puts the menu away
 		//pause.setVisible(false);				//puts the pause menu away
 		frame.getContentPane().add(game);
+        inUse = true;
 	}
 
 	public void newGame(int difficulty) {
@@ -93,11 +99,13 @@ public class MineGUI {
 					  (60*mc.getGrid().getSize() > screenSize.height-30
 						? screenSize.height-30 : 60*mc.getGrid().getSize()));
 
-		game.add(mc);							//puts the game in the jPanel
+        createToolbar();
+        game.add(mc);							//puts the game in the jPanel
 		game.add(toolbar,BorderLayout.NORTH);	//puts the game toolbar label at the top of the screen
 		menu.setVisible(false);					//puts the menu away
 		//pause.setVisible(false);				//puts the pause menu away
 		frame.getContentPane().add(game);
+        inUse = true;
 	}
 
 	/**
@@ -168,7 +176,8 @@ public class MineGUI {
 		menu.add(load);
 		menu.add(help);
 		//pause.setVisible(false);
-		frame.getContentPane().add(menu);	
+		frame.getContentPane().add(menu);
+        inUse = false;
 	}
     
     public void createToolbar(){
@@ -178,7 +187,7 @@ public class MineGUI {
         refresh = new JButton("Reset Game");
         mainMenu = new JButton("Main Menu");
         //quitMine = new JButton("Quit Minesweeper"); //based on principle that we complete toolbar
-        inGameHelp = = new JButton("Help");
+        inGameHelp = new JButton("Help");
         addActionListener(refresh, "Reset Game");
         addActionListener(mainMenu, "Main Menu");
         addActionListener(inGameHelp, "Help");
@@ -191,34 +200,34 @@ public class MineGUI {
 	/**
 	 *  Allows the escape button to function as a pause key
 	 */
-	public void escapeListener() {
-		AbstractAction escapeAction = new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(mc.getStatus()==0)
-					pause();
-				else{
-					game.setVisible(false);
-					createMainMenu();
-				}
-			}
-		};
-		String key = "ESCAPE";
-		KeyStroke keyStroke = KeyStroke.getKeyStroke(key);
-		game.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStroke, key);
-		game.getActionMap().put(key, escapeAction);
-
-	}
+//	public void escapeListener() {
+//		AbstractAction escapeAction = new AbstractAction() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				if(mc.getStatus()==0)
+//					pause();
+//				else{
+//					game.setVisible(false);
+//					createMainMenu();
+//				}
+//			}
+//		};
+//		String key = "ESCAPE";
+//		KeyStroke keyStroke = KeyStroke.getKeyStroke(key);
+//		game.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStroke, key);
+//		game.getActionMap().put(key, escapeAction);
+//
+//	}
 	
 	/**
 	 *  Sets a message on the status bar on the top of the GUI
 	 *
 	 *	@param status - message you wish the status bar to display
 	 */
-	public void setLabel(String status){
-		this.status.setText(status);
-	}
-	
+//	public void setLabel(String status){
+//		this.status.setText(status);
+//	}
+//	
 	/**
 	 * Creates a specified task for the buttons
 	 * @param button - The JButton that you want to assign a task to
@@ -252,16 +261,18 @@ public class MineGUI {
 			}
 		});	
 		}
-		else if(action == ("Main Menu")
+		else if(action == "Main Menu")
 			{
 				button.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						// Execute when button is pressed
+                        System.out.println("save");
+                        save();
 						createMainMenu();
 			}
 		});	
 		}
-        else if(action == ("Reset Game")
+        else if(action == "Reset Game")
             {
                 button.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
@@ -292,7 +303,7 @@ public class MineGUI {
 							HelpScreen helpScreen=new HelpScreen(frame, menu);
 							}
 						else{
-							HelpScreen helpScreen = new HelpScreen(frame, pause);
+							HelpScreen helpScreen = new HelpScreen(frame, game);
 							}
 			}
 		});	
@@ -334,18 +345,19 @@ public class MineGUI {
 				Grid grid=(Grid)one;
 				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 				game = new JPanel(new BorderLayout());			//our game panel e.g. where everything will be put in for this display
-				escapeListener();								//listens for the esc button
+				//escapeListener();								//listens for the esc button
 				//status= new JLabel("Press esc to pause game"); //Our good label
 				//Messager m = new SOMessager();			
-				mc = new MineComponent(grid, this);	//creates our game interface
-				frame.setSize((65*mc.getGrid().getSize() > screenSize.width
-								? screenSize.width : 65*mc.getGrid().getSize()),
-							  (60*mc.getGrid().getSize() > screenSize.height-30
-								? screenSize.height-30 : 60*mc.getGrid().getSize()));
+				mc = new MineComponent(grid, this);//creates our game interface
+                int gridSize = mc.getGrid().getSize();
+				frame.setSize((65*gridSize > screenSize.width
+								? screenSize.width : 65*gridSize),
+							  (60*gridSize > screenSize.height-30
+								? screenSize.height-30 : 60*gridSize));
 				game.add(mc);							//puts the game in the jPanel
 				game.add(toolbar,BorderLayout.NORTH);	//puts the game toolbar at the top of the screen
 				menu.setVisible(false);					//puts the menu away
-				pause.setVisible(false);				//puts the pause menu away
+				//pause.setVisible(false);				//puts the pause menu away
 				frame.getContentPane().add(game);
 				mc.refresh();
 			} catch (ClassNotFoundException e) {
