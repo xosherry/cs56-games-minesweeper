@@ -44,7 +44,7 @@ public class MineGUI {
     //TODO: change all instantiations of menu and game to change the previous boolean
     
 	MineComponent mc; //MineComponent is the actual layout of the game, and what makes the game function
-	//JLabel status;		//the game status label that is displayed during the game
+	JLabel status;		//the game status label that is displayed during the game
 
 	/** no-arg constructor which creates the GUI of the Main Menu for Minesweeper
 	 *  This menu includes a start and help button
@@ -81,6 +81,8 @@ public class MineGUI {
 						? screenSize.height-40 : 60*mc.getGrid().getSize()));
 
 		createToolbar();
+        System.out.println("checking value of toolbar");
+        System.out.println(toolbar==null);
         game.add(mc);							//puts the game in the jPanel
 		game.add(toolbar,BorderLayout.NORTH);	//puts the game toolbar at the top of the screen
 		menu.setVisible(false);					//puts the menu away
@@ -90,13 +92,14 @@ public class MineGUI {
 	}
 
 	public void newGame(int difficulty) {
-        System.out.println("called new game with difficulty" + difficulty);
+        System.out.println("called new game with difficulty " + difficulty);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		game = new JPanel(new BorderLayout());			//our game panel e.g. where everything will be put in for this display
 		//escapeListener();								//listens for the esc button
 		//status= new JLabel("Press esc to pause game"); //Our good label
+        System.out.println("next line is grid constructor");
 		Grid grid = new Grid(true, difficulty);
-		//Messager m = new SOMessager();			
+        System.out.println("next line is add grid component");
 		mc = new MineComponent(grid, this);	//creates our game interface
 		frame.setSize((65*mc.getGrid().getSize() > screenSize.width
 						? screenSize.width : 65*mc.getGrid().getSize()),
@@ -104,8 +107,10 @@ public class MineGUI {
 						? screenSize.height-30 : 60*mc.getGrid().getSize()));
 
         createToolbar();
-        game.add(mc);							//puts the game in the jPanel
-		game.add(toolbar,BorderLayout.NORTH);	//puts the game toolbar label at the top of the screen
+        System.out.println("next line is add main menu");
+        game.add(mc);//puts the game in the jPanel
+        
+		//game.add(toolbar,BorderLayout.NORTH);	//puts the game toolbar label at the top of the screen
 		menu.setVisible(false);					//puts the menu away
 		//pause.setVisible(false);				//puts the pause menu away
 		frame.getContentPane().add(game);
@@ -187,19 +192,31 @@ public class MineGUI {
     
     public void createToolbar(){
         System.out.println("called create toolbar");
-        JToolBar toolbar = new JToolBar(); //make toolbar
+        JToolBar toolbar = new JToolBar("In-game toolbar"); //make toolbar
         //make buttons
+        System.out.println("toolbar was created");
+        
         refresh = new JButton("Reset Game");
         mainMenu = new JButton("Main Menu");
         //quitMine = new JButton("Quit Minesweeper"); //based on principle that we complete toolbar
         inGameHelp = new JButton("Help");
+        System.out.println("buttons were created");
+        
         addActionListener(refresh, "Reset Game");
         addActionListener(mainMenu, "Main Menu");
         addActionListener(inGameHelp, "Help");
-        toolbar.add(mainMenu);
-        toolbar.add(refresh);
-        toolbar.add(inGameHelp);
+        System.out.println("listeners created");
         
+        System.out.println("next line is add main menu");
+        
+        toolbar.add(mainMenu);
+        System.out.println("next line is add reset");
+        
+        toolbar.add(refresh);
+        System.out.println("next line is add help");
+        
+        toolbar.add(inGameHelp);
+        frame.getContentPane().add(toolbar);
     }
 	
 	/**
@@ -229,10 +246,10 @@ public class MineGUI {
 	 *
 	 *	@param status - message you wish the status bar to display
 	 */
-//	public void setLabel(String status){
-//		this.status.setText(status);
-//	}
-//	
+	public void setLabel(String status){
+		this.status.setText(status);
+	}
+	
 	/**
 	 * Creates a specified task for the buttons
 	 * @param button - The JButton that you want to assign a task to
