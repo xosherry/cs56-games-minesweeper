@@ -7,6 +7,12 @@ import java.io.Serializable;
 	@author Caleb Nelson
     @author David Acevedo
     @version 2015/03/04 for lab07, cs56, W15
+    
+ 
+    @author Isaiah Egan 
+    @author Austin Hwang
+    @author Sai Srimat
+    @version July 2016 for Legacy Code, cs56, M16
 
 */
 public class Grid implements Serializable{
