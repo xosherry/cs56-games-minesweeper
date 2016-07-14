@@ -103,21 +103,21 @@ public class MineGUI {
 	/**
 	 *  Pauses the game and brings up the pause menu
 	 */
-	public void pause() {
-		frame.setSize(650, 600);
-		inUse=true;							//the pause menu is now in use
-		frame.getContentPane().add(pause);	//frame now puts pause in its dear list of importance
-		game.setVisible(false);				//put the game away for a bit
-		pause.setVisible(true);				//show the good ol pause menu
-	}
+//	public void pause() {
+//		frame.setSize(650, 600);
+//		inUse=true;							//the pause menu is now in use
+//		frame.getContentPane().add(pause);	//frame now puts pause in its dear list of importance
+//		game.setVisible(false);				//put the game away for a bit
+//		pause.setVisible(true);				//show the good ol pause menu
+//	}
 	
 	/**
 	 *  Resumes the game and takes you back to the game
 	 */
-	public void resume() {
-		pause.setVisible(false);			//put the pause menu back in its box
-		game.setVisible(true);				//bring the game back out of its box
-	}
+//	public void resume() {
+//		pause.setVisible(false);			//put the pause menu back in its box
+//		game.setVisible(true);				//bring the game back out of its box
+//	}
 	
 	/**
 	 *  creates a Pause menu for when you want to pause the game
@@ -167,7 +167,7 @@ public class MineGUI {
 		menu.add(hardGame);
 		menu.add(load);
 		menu.add(help);
-		pause.setVisible(false);
+		//pause.setVisible(false);
 		frame.getContentPane().add(menu);	
 	}
     
@@ -175,10 +175,16 @@ public class MineGUI {
         
         JToolBar toolbar = new JToolBar(); //make toolbar
         //make buttons
-        refresh = new JButton("Reset");
+        refresh = new JButton("Reset Game");
         mainMenu = new JButton("Main Menu");
         //quitMine = new JButton("Quit Minesweeper"); //based on principle that we complete toolbar
         inGameHelp = = new JButton("Help");
+        addActionListener(refresh, "Reset Game");
+        addActionListener(mainMenu, "Main Menu");
+        addActionListener(inGameHelp, "Help");
+        toolbar.add(mainMenu);
+        toolbar.add(refresh);
+        toolbar.add(inGameHelp);
         
     }
 	
@@ -246,7 +252,7 @@ public class MineGUI {
 			}
 		});	
 		}
-		else if(action == "Clear Game")
+		else if(action == ("Main Menu")
 			{
 				button.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
@@ -255,6 +261,28 @@ public class MineGUI {
 			}
 		});	
 		}
+        else if(action == ("Reset Game")
+            {
+                button.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        // Execute when button is pressed
+                        int diff = mc.getGrid().getSize();
+                        if (diff ==10)
+                        {
+                            newGame(0);
+                        }
+                        else if (diff ==15)
+                        {
+                            newGame(1);
+                        }
+                        else if (diff ==20)
+                        {
+                            newGame(2);
+                        }
+
+            }
+        });
+        }
 		else if(action == "Help")
 			{
 				button.addActionListener(new ActionListener() {
@@ -269,14 +297,14 @@ public class MineGUI {
 			}
 		});	
 	}
-		else if(action == "Resume"){
-				button.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						// Execute when button is pressed
-						resume();
-					}	
-				});	
-		}
+//		else if(action == "Resume"){
+//				button.addActionListener(new ActionListener() {
+//					public void actionPerformed(ActionEvent e) {
+//						// Execute when button is pressed
+//						resume();
+//					}	
+//				});	
+//		}
 		else if(action == "Load"){
 			button.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
