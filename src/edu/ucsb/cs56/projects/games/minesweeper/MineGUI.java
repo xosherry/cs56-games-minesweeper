@@ -50,6 +50,7 @@ public class MineGUI {
 	 *  This menu includes a start and help button
      */
 	public MineGUI() {
+        System.out.println("called MineGUI");
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//createPausePanel();
@@ -57,6 +58,7 @@ public class MineGUI {
 
 		frame.applyComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		frame.setSize(650, 600);
+        System.out.println("next line will make GUI visible");
 		frame.setVisible(true);
 	}
 
@@ -65,6 +67,7 @@ public class MineGUI {
 	 */
 	public void newGame() {
         
+        System.out.println("called new game");
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		game = new JPanel(new BorderLayout());			//our game panel e.g. where everything will be put in for this display
 		//escapeListener();								//listens for the esc button
@@ -87,6 +90,7 @@ public class MineGUI {
 	}
 
 	public void newGame(int difficulty) {
+        System.out.println("called new game with difficulty" + difficulty);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		game = new JPanel(new BorderLayout());			//our game panel e.g. where everything will be put in for this display
 		//escapeListener();								//listens for the esc button
@@ -156,7 +160,8 @@ public class MineGUI {
 	 *  Creates the main menu, the menu when you launch the application
 	 */
 	public void createMainMenu(){
-		frame.setSize(650, 600);
+		System.out.println("called create main menu");
+        frame.setSize(650, 600);
 		menu = new JPanel(new GridLayout(4,0));		//our 2 section grid layout for our main menu
 
 		easyGame = new JButton("New Easy Game");
@@ -169,7 +174,7 @@ public class MineGUI {
 		addActionListener(hardGame, "New Hard Game");
 		addActionListener(help, "Help");
 		addActionListener(load,"Load");	
-		addActionListener(save, "Save");
+		//addActionListener(save, "Save");
 		menu.add(easyGame);
 		menu.add(medGame);
 		menu.add(hardGame);
@@ -181,7 +186,7 @@ public class MineGUI {
 	}
     
     public void createToolbar(){
-        
+        System.out.println("called create toolbar");
         JToolBar toolbar = new JToolBar(); //make toolbar
         //make buttons
         refresh = new JButton("Reset Game");
