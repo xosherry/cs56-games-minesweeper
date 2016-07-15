@@ -48,10 +48,21 @@ public class GridTest {
 	
 	@Test
 	public void test_setZero(){
-		//Can not test due to not knowing how to check a double array without overflowing 
-		//the test with 100 zeros and not using a for loop for this test and writing a getter
-		//for the grid in the Grid class
-	}
+	
+        boolean correct = true;
+        Grid test = new Grid(true);
+        test.setZero();
+        int s = test.getSize();
+        for (int i =0; i< s; i++){
+            for (int j=0; j<s; j++)
+            {
+                
+                if (test.getG()[i][j]!='0')
+                    correct = false;
+            }
+        }
+        assertEquals(true, correct);
+    }
 	
 	/**
 	 * Test case for blankToMine method of the Grid class
