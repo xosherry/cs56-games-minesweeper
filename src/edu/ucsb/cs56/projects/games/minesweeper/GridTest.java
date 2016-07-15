@@ -56,7 +56,6 @@ public class GridTest {
         for (int i =0; i< s; i++){
             for (int j=0; j<s; j++)
             {
-                
                 if (test.getG()[i][j]!='0')
                     correct = false;
             }
@@ -71,10 +70,56 @@ public class GridTest {
 	 */
 	
 	@Test
-	public void test_blankToMine(){
-		//not able to test due to the use of Math.random, too random for me
-	}
+	public void test_blankToMine_Easy(){
+        
+        int count = 0;
+        Grid test = new Grid(true,0);
+        int s = test.getSize();
+        for (int i =0; i< s; i++){
+            for (int j=0; j<s; j++)
+            {
+                if (test.getG()[i][j]=='X')
+                    count++;
+            }
+        }
+        assertEquals(10, count);
+        
+    }
 	
+    @Test
+    public void test_blankToMine_Medium(){
+        
+        int count = 0;
+        Grid test = new Grid(true,1);
+        int s = test.getSize();
+        for (int i =0; i< s; i++){
+            for (int j=0; j<s; j++)
+            {
+                if (test.getG()[i][j]=='X')
+                    count++;
+            }
+        }
+        assertEquals(30, count);
+        
+    }
+    
+    @Test
+    public void test_blankToMine_Hard(){
+        
+        int count = 0;
+        Grid test = new Grid(true,2);
+        int s = test.getSize();
+        for (int i =0; i< s; i++){
+            for (int j=0; j<s; j++)
+            {
+                if (test.getG()[i][j]=='X')
+                    count++;
+            }
+        }
+        assertEquals(60, count);
+    }
+
+
 	/**
 	 * Test case for insertNums method of the Grid class
 	 *
@@ -83,10 +128,54 @@ public class GridTest {
 	
 	@Test
 	public void test_insertNums(){
-		//not able to test due to needing a getter for grid in the Grid class and that
-		//grid variable being a double array, making the test extremely messy, although isOpen
-		//checks in a way if this works
-	}
+        boolean correct = true;
+        
+        Grid t = new Grid(true, -1);
+        Grid k = new Grid(true, -1);
+        //make a entirely known array and an array with known bombs
+        char[][] test = new char[4][4];
+        char[][] known = new char[4][4];
+        known[0][0]='0';
+        known[0][1]='1';
+        known[0][2]='1';
+        known[0][3]='1';
+        known[1][0]='1';
+        known[1][1]='2';
+        known[1][3]='1';
+        known[2][0]='2';
+        known[2][2]='3';
+        known[2][3]='2';
+        known[3][1]='3';
+        known[3][3]='1';
+        test[0][0]='0';
+        test[0][1]='0';
+        test[0][2]='0';
+        test[0][3]='0';
+        test[1][0]='0';
+        test[1][1]='0';
+        test[1][3]='0';
+        test[2][0]='0';
+        test[2][2]='0';
+        test[2][3]='0';
+        test[3][1]='0';
+        test[3][3]='0';
+        test[1][2]=known[1][2]=test[2][1]=known[2][1]= test[3][2]=known[3][2]=test[3][0]=known[3][0]='X';
+        //assign grid arrays to hard coded arrays
+        t.setGrid(test);
+        k.setGrid(known);
+        
+        t.insertNums();
+        
+        for (int i =0; i<4; i++){
+            for (int j=0; j<4; j++)
+            {
+                if (t.getG()[i][j]!=k.getG()[i][j])
+                    correct = false;
+            }
+        }
+        
+        assertEquals(true, correct);
+    }
 	
 	/**
 	 * Test case for mapMaker method of the Grid class

@@ -41,11 +41,19 @@ public class Grid implements Serializable{
 	insertNums();
 	mapMaker(map);
     }
+    public void setGrid(char[][] input){ //method that creates a known grid for testing various Grid methods
+        grid = input;
+        size = 4;
+    }
+
     
     public Grid(boolean isGUI, int difficulty) {
 	this.isGUI=isGUI;
 	switch (difficulty){
-		case 0:
+        case -1: //for known grid testing
+            size = 4;
+            break;
+        case 0:
 			size = EASY_SIZE;
 			break;
 		case 1:
@@ -61,7 +69,9 @@ public class Grid implements Serializable{
 	map = new char[size][size];
 	setZero();
 	switch (difficulty){
-		case 0:
+        case -1:
+            break;
+        case 0:
 			for(int i = 0; i < size; i++){
 	    		blankToMine();
 			}

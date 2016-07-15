@@ -189,15 +189,11 @@ public class MineGUI {
 						// Execute when button is pressed
                         System.out.println("save");
                         save();
-                        System.out.println("next makes game invisible");
                         game.setVisible(false);
                         inUse = false;
                         refreshFrame(frame);
-                        System.out.println("next line creates menu");
                         createMainMenu();
                         
-                        System.out.println("inuse = " +inUse);
-                        System.out.println("next line makes menu visible");
                         menu.setVisible(true);
 			}
 		});	
