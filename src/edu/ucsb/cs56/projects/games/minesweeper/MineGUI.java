@@ -104,7 +104,6 @@ public class MineGUI {
 	 *  Creates the main menu, the menu when you launch the application
 	 */
 	public void createMainMenu(){
-		System.out.println("called create main menu");
         frame.setSize(650, 600);
 		menu = new JPanel(new GridLayout(4,0));		//our 2 section grid layout for our main menu
 
@@ -128,30 +127,19 @@ public class MineGUI {
 	}
     
     public void createButtons(JToolBar toolbar){
-        System.out.println("called create buttons");
         //make buttons
         
         refresh = new JButton("Reset Game");
         mainMenu = new JButton("Main Menu");
         //quitMine = new JButton("Quit Minesweeper"); //based on principle that we complete toolbar
         inGameHelp = new JButton("Help");
-        System.out.println("buttons were created");
         
         addActionListener(refresh, "Reset Game");
         addActionListener(mainMenu, "Main Menu");
         addActionListener(inGameHelp, "Help");
-        System.out.println("listeners created");
-        
-        System.out.println("next line is add main menu");
-        
         toolbar.add(mainMenu);
-        System.out.println("next line is add reset");
-        
         toolbar.add(refresh);
-        System.out.println("next line is add help");
-        
         toolbar.add(inGameHelp);
-        frame.getContentPane().add(toolbar);
     }
 	
 	/**
@@ -203,7 +191,9 @@ public class MineGUI {
 						// Execute when button is pressed
                         System.out.println("save");
                         save();
-						createMainMenu();
+                        game.setVisible(false);
+                        inUse = false;
+                        menu.setVisible(true);
 			}
 		});	
 		}
@@ -212,7 +202,9 @@ public class MineGUI {
                 button.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         // Execute when button is pressed
+                        createMainMenu();
                         int diff = mc.getGrid().getSize();
+                        System.out.println("game size = " + diff);
                         if (diff ==10)
                         {
                             newGame(0);
@@ -279,6 +271,8 @@ public class MineGUI {
 							  (60*gridSize > screenSize.height-30
 								? screenSize.height-30 : 60*gridSize));
 				game.add(mc);							//puts the game in the jPanel
+                JToolBar toolbar = new JToolBar("In-game toolbar");
+                createButtons(toolbar);
 				game.add(toolbar,BorderLayout.NORTH);	//puts the game toolbar at the top of the screen
 				menu.setVisible(false);					//puts the menu away
 				frame.getContentPane().add(game);
