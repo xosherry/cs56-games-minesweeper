@@ -185,7 +185,18 @@ public class GridTest {
 	 
 	@Test
 	public void test_mapMaker(){
-		//Not able to test due to needing a getter for map and map being a double array
+        int count =0;
+        Grid test = new Grid(true);
+        int s = test.getSize();
+        for (int i =0; i< s; i++){
+            for (int j=0; j<s; j++)
+            {
+                if (test.getM()[i][j]=='?')
+                    count++;
+            }
+        }
+
+        assertEquals(100, count);
 	}
 	
 	/**
@@ -196,7 +207,8 @@ public class GridTest {
 	 
 	@Test
 	public void test_toString(){
-		//not able to test due to there being way too many characters, about 200, maybe more 
+		
+        //not going to implement tests, this version is obsolete
 	}
 	
 	 
@@ -235,7 +247,30 @@ public class GridTest {
 	 
 	@Test
 	public void test_isMine(){
-		//not able to test due to the mine being at a random position
+        boolean correct = true;
+        Grid k = new Grid(true, -1);
+        //make a entirely known array
+        char[][] known = new char[4][4];
+        known[0][0]='0';
+        known[0][1]='1';
+        known[0][2]='1';
+        known[0][3]='X';
+        known[1][0]='1';
+        known[1][1]='2';
+        known[1][3]='1';
+        known[2][0]='X';
+        known[2][2]='X';
+        known[2][3]='2';
+        known[3][1]='3';
+        known[3][3]='1';
+        known[1][2]=known[2][1]=known[3][2]=known[3][0]='0';
+        //assign grid arrays to hard coded arrays
+        k.setGrid(known);
+        
+        if (!k.isMine(8)|!k.isMine(10)|!k.isMine(3))
+            correct = false;
+        assertEquals(true, correct);
+
 	}
 	
 	/**
@@ -272,7 +307,29 @@ public class GridTest {
 	
 	@Test
 	public void test_searchBox(){
-		//no real way to test it because it depends on random from other methods
+        boolean correct = true;
+        Grid k = new Grid(true, -1);
+        //make a entirely known array
+        char[][] known = new char[4][4];
+        known[0][0]='0';
+        known[0][1]='1';
+        known[0][2]='1';
+        known[0][3]='2';
+        known[1][0]='1';
+        known[1][1]='2';
+        known[1][3]='1';
+        known[2][0]='X';
+        known[2][2]='1';
+        known[2][3]='2';
+        known[3][1]='3';
+        known[3][3]='1';
+        known[1][2]=known[2][1]=known[3][2]=known[3][0]='0';
+        //assign grid arrays to hard coded arrays
+        k.setGrid(known);
+        if (k.searchBox(8)!='X'|k.searchBox(10)!='1'|k.searchBox(0)!='0'|k.searchBox(3)!='2')
+            correct = false;
+        assertEquals(true, correct);
+        
 	}
 	
 	/**
@@ -283,8 +340,15 @@ public class GridTest {
 	
 	@Test
 	public void test_flagBox(){
-		//no getter for the double array or a way to search the specific section of the array
-		//so I can not test without that getter
+        boolean correct = true;
+        Grid test = new Grid(true);
+        test.flagBox(6);
+        test.flagBox(12);
+        test.flagBox(27);
+        if (test.getM()[0][6]!='F'|test.getM()[1][2]!='F'|test.getM()[2][7]!='F')
+            correct = false;
+        assertEquals(true, correct);
+
 	}
 
 	/**
@@ -295,9 +359,18 @@ public class GridTest {
 	
 	@Test
 	public void test_deflagBox(){
-		//no getter for the double array or a way to search the specific section of the array
-		//so I can not test without that getter
-	}
+        boolean correct = true;
+        Grid test = new Grid(true);
+        test.flagBox(6);
+        test.flagBox(12);
+        test.flagBox(27);
+        test.deflagBox(6);
+        test.deflagBox(12);
+        test.deflagBox(27);
+        if (test.getM()[0][6]!='?'|test.getM()[1][2]!='?'|test.getM()[2][7]!='?')
+            correct = false;
+        assertEquals(true, correct);
+    }
 	
 	/**
 	 * Test case for findAllZeros method of the Grid class
@@ -307,7 +380,30 @@ public class GridTest {
 	
 	@Test
 	public void test_findAllZeros(){
-		//Due to the need of random from other methods, I can not test it.
+        boolean correct = true;
+        Grid k = new Grid(true, -1);
+        //make a entirely known array
+        char[][] known = new char[4][4];
+        known[0][0]='0';
+        known[0][1]='1';
+        known[0][2]='1';
+        known[0][3]='2';
+        known[1][0]='1';
+        known[1][1]='2';
+        known[1][3]='1';
+        known[2][0]='X';
+        known[2][2]='1';
+        known[2][3]='2';
+        known[3][1]='3';
+        known[3][3]='1';
+        known[1][2]=known[2][1]=known[3][2]=known[3][0]='0';
+        //assign grid arrays to hard coded arrays
+        k.setGrid(known);
+        k.findAllZeros(0,0);
+        if (k.getM()[0][0]!='0'|k.getM()[1][0]!='1'|k.getM()[1][1]!='2'|k.getM()[0][1]!='1')
+            correct = false;
+        assertEquals(true, correct);
+
 	}
 	
 	/**
@@ -330,6 +426,30 @@ public class GridTest {
 	
 	@Test
 	public void test_getCell(){
-		//I can't test due to the use of Math.random in another method
+        boolean correct = true;
+        Grid k = new Grid(true, -1);
+        //make a entirely known array
+        char[][] known = new char[4][4];
+        known[0][0]='0';
+        known[0][1]='1';
+        known[0][2]='1';
+        known[0][3]='2';
+        known[1][0]='1';
+        known[1][1]='2';
+        known[1][3]='1';
+        known[2][0]='X';
+        known[2][2]='1';
+        known[2][3]='2';
+        known[3][1]='3';
+        known[3][3]='1';
+        known[1][2]=known[2][1]=known[3][2]=known[3][0]='0';
+        //assign grid arrays to hard coded arrays
+        k.setGrid(known);
+        k.findAllZeros(0,0);
+        k.flagBox(3);
+        if (k.getCell(0)!='0'|k.getCell(3)!='F'|k.getCell(13)!='?')
+            correct = false;
+        assertEquals(true, correct);
+
 	}
 }

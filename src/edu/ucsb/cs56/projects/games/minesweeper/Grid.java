@@ -311,7 +311,7 @@ public class Grid implements Serializable{
      * Looks for surrounding numbers near the cell and opens them, repeats when find another zero
      */
 
-    public void findAllZeros(int row, int col){
+    public void findAllZeros(int row, int col){ //TODO: throw exception
 	for(int i = row-1; i <= row+1; i++){
 	    for(int j = col-1; j <= col+1; j++){
 		if(i >= 0 && i <= size-1 && j >= 0 && j <= size-1 && !(isMine(i*size+j)) && !(isOpen(i*size+j))){
@@ -358,6 +358,9 @@ public class Grid implements Serializable{
      }
     char[][] getG(){
         return grid;
+    }
+    char[][] getM(){
+        return map;
     }
 
 }
