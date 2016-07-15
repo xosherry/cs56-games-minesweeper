@@ -7,6 +7,12 @@ import java.io.Serializable;
 	@author Caleb Nelson
     @author David Acevedo
     @version 2015/03/04 for lab07, cs56, W15
+    
+ 
+    @author Isaiah Egan 
+    @author Austin Hwang
+    @author Sai Srimat
+    @version July 2016 for Legacy Code, cs56, M16
 
 */
 public class Grid implements Serializable{
@@ -35,11 +41,19 @@ public class Grid implements Serializable{
 	insertNums();
 	mapMaker(map);
     }
+    public void setGrid(char[][] input){ //method that creates a known grid for testing various Grid methods
+        grid = input;
+        size = 4;
+    }
+
     
     public Grid(boolean isGUI, int difficulty) {
 	this.isGUI=isGUI;
 	switch (difficulty){
-		case 0:
+        case -1: //for known grid testing
+            size = 4;
+            break;
+        case 0:
 			size = EASY_SIZE;
 			break;
 		case 1:
@@ -55,7 +69,9 @@ public class Grid implements Serializable{
 	map = new char[size][size];
 	setZero();
 	switch (difficulty){
-		case 0:
+        case -1:
+            break;
+        case 0:
 			for(int i = 0; i < size; i++){
 	    		blankToMine();
 			}
@@ -295,7 +311,7 @@ public class Grid implements Serializable{
      * Looks for surrounding numbers near the cell and opens them, repeats when find another zero
      */
 
-    public void findAllZeros(int row, int col){
+    public void findAllZeros(int row, int col){ //TODO: throw exception
 	for(int i = row-1; i <= row+1; i++){
 	    for(int j = col-1; j <= col+1; j++){
 		if(i >= 0 && i <= size-1 && j >= 0 && j <= size-1 && !(isMine(i*size+j)) && !(isOpen(i*size+j))){
@@ -340,5 +356,11 @@ public class Grid implements Serializable{
      public char getCell(int cell){
 	 return map[cell/size][cell%size];   
      }
+    char[][] getG(){
+        return grid;
+    }
+    char[][] getM(){
+        return map;
+    }
 
 }

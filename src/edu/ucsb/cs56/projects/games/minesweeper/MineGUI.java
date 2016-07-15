@@ -21,20 +21,23 @@ import javax.swing.*;
 */
 
 public class MineGUI {
+    JToolBar toolbar;
+    JButton mainMenu;
+    JButton quitMine;
+    JButton inGameHelp;
+    JButton refresh;
 	JButton easyGame;
 	JButton medGame;
 	JButton hardGame;
 	JButton load; //loads game
 	JButton help;	//Main Menu Help Button
-	JButton clearPause;	//Pause Menu New Game Button
-	JButton helpPause;	//Pause Menu Help Button
-	JButton resume;	//Pause Menu Resume Button
 	JButton save;
 	JFrame frame;	//The frame is where all the good stuff is displayed e.g. Everything
 	JPanel menu;	//Menu Panel, initial panel at initial creation of the game e.g. Main Menu
 	JPanel game; 	//Game Panel, where the game is played
-	JPanel pause;	//Pause Menu JPanel
-	boolean inUse; //if pause menu is started and in use
+	boolean inUse; //if game is started and in use
+    
+    
 	MineComponent mc; //MineComponent is the actual layout of the game, and what makes the game function
 	JLabel status;		//the game status label that is displayed during the game
 
@@ -42,108 +45,64 @@ public class MineGUI {
 	 *  This menu includes a start and help button
      */
 	public MineGUI() {
-		frame = new JFrame();
+        frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		createPausePanel();
 		createMainMenu();
 
 		frame.applyComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		frame.setSize(650, 600);
-		frame.setVisible(true);
+        frame.setVisible(true);
 	}
 
 	/** 
 	 *  Starts a new Minesweeper game from the main menu
 	 */
 	public void newGame() {
+        
+        System.out.println("called new game");
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		game = new JPanel(new BorderLayout());			//our game panel e.g. where everything will be put in for this display
-		escapeListener();								//listens for the esc button
-		status= new JLabel("Press esc to pause game"); //Our good label
 		Grid grid = new Grid(true);
-		//Messager m = new SOMessager();			
 		mc = new MineComponent(grid, this);	//creates our game interface
 		frame.setSize((65*mc.getGrid().getSize() > screenSize.width
 						? screenSize.width : 65*mc.getGrid().getSize()),
 					  (60*mc.getGrid().getSize() > screenSize.height-40
 						? screenSize.height-40 : 60*mc.getGrid().getSize()));
 
-		game.add(mc);							//puts the game in the jPanel
-		game.add(status,BorderLayout.NORTH);	//puts the game status label at the top of the screen
+        JToolBar toolbar = new JToolBar("In-game toolbar");
+        createButtons(toolbar);
+        game.add(mc);							//puts the game in the jPanel
+		game.add(toolbar,BorderLayout.NORTH);	//puts the game toolbar at the top of the screen
 		menu.setVisible(false);					//puts the menu away
-		pause.setVisible(false);				//puts the pause menu away
 		frame.getContentPane().add(game);
+        inUse = true;
 	}
 
 	public void newGame(int difficulty) {
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		game = new JPanel(new BorderLayout());			//our game panel e.g. where everything will be put in for this display
-		escapeListener();								//listens for the esc button
-		status= new JLabel("Press esc to pause game"); //Our good label
-		Grid grid = new Grid(true, difficulty);
-		//Messager m = new SOMessager();			
+        Grid grid = new Grid(true, difficulty);
 		mc = new MineComponent(grid, this);	//creates our game interface
 		frame.setSize((65*mc.getGrid().getSize() > screenSize.width
 						? screenSize.width : 65*mc.getGrid().getSize()),
 					  (60*mc.getGrid().getSize() > screenSize.height-30
 						? screenSize.height-30 : 60*mc.getGrid().getSize()));
-
-		game.add(mc);							//puts the game in the jPanel
-		game.add(status,BorderLayout.NORTH);	//puts the game status label at the top of the screen
+        
+        JToolBar toolbar = new JToolBar("In-game toolbar");
+        createButtons(toolbar);
+        game.add(mc);//puts the game in the jPanel
+        
+		game.add(toolbar,BorderLayout.NORTH);	//puts the game toolbar label at the top of the screen
 		menu.setVisible(false);					//puts the menu away
-		pause.setVisible(false);				//puts the pause menu away
 		frame.getContentPane().add(game);
-	}
-
-	/**
-	 *  Pauses the game and brings up the pause menu
-	 */
-	public void pause() {
-		frame.setSize(650, 600);
-		inUse=true;							//the pause menu is now in use
-		frame.getContentPane().add(pause);	//frame now puts pause in its dear list of importance
-		game.setVisible(false);				//put the game away for a bit
-		pause.setVisible(true);				//show the good ol pause menu
-	}
-	
-	/**
-	 *  Resumes the game and takes you back to the game
-	 */
-	public void resume() {
-		pause.setVisible(false);			//put the pause menu back in its box
-		game.setVisible(true);				//bring the game back out of its box
-	}
-	
-	/**
-	 *  creates a Pause menu for when you want to pause the game
-	 */
-	public void createPausePanel(){
-		pause = new JPanel(new GridLayout(3,0));	//our 3 section grid layout for our pause menu
-		resume = new JButton("Resume");				//create Button#1
-		clearPause = new JButton("Clear Game");		//create Button#2
-		helpPause = new JButton("Help");			//create Button#3
-		load=new JButton("load last game");			//create Button#4
-		save = new JButton("save game");			//create Button#5
-		
-		addActionListener(resume, "Resume");		//Give Button#1 purpose
-		addActionListener(clearPause, "Clear Game");//Give Button#2 purpose
-		addActionListener(helpPause, "Help");		//Give Button#3 purpose
-		addActionListener(load,"Load");				//Give Button#4 purpose
-		addActionListener(save, "Save");
-		//adds from order of importance e.g. top==more important than bottom
-		pause.add(resume);							//Add Button#1 to our top section
-		pause.add(clearPause);					//Add Button#2 to our middle section
-		pause.add(helpPause);						//Add Button#3 to our bottom section
-		pause.add(load);						//Add Button#3 to our bottom section
-		pause.add(save);
-		frame.getContentPane().add(pause);
+        inUse = true;
 	}
 	
 	/**
 	 *  Creates the main menu, the menu when you launch the application
 	 */
 	public void createMainMenu(){
-		frame.setSize(650, 600);
+        frame.setSize(650, 600);
 		menu = new JPanel(new GridLayout(4,0));		//our 2 section grid layout for our main menu
 
 		easyGame = new JButton("New Easy Game");
@@ -156,37 +115,30 @@ public class MineGUI {
 		addActionListener(hardGame, "New Hard Game");
 		addActionListener(help, "Help");
 		addActionListener(load,"Load");	
-		addActionListener(save, "Save");
 		menu.add(easyGame);
 		menu.add(medGame);
 		menu.add(hardGame);
 		menu.add(load);
 		menu.add(help);
-		pause.setVisible(false);
-		frame.getContentPane().add(menu);	
+		frame.getContentPane().add(menu);
+        inUse = false;
 	}
-	
-	/**
-	 *  Allows the escape button to function as a pause key
-	 */
-	public void escapeListener() {
-		AbstractAction escapeAction = new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(mc.getStatus()==0)
-					pause();
-				else{
-					game.setVisible(false);
-					createMainMenu();
-				}
-			}
-		};
-		String key = "ESCAPE";
-		KeyStroke keyStroke = KeyStroke.getKeyStroke(key);
-		game.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStroke, key);
-		game.getActionMap().put(key, escapeAction);
-
-	}
+    
+    public void createButtons(JToolBar toolbar){
+        //make buttons
+        
+        refresh = new JButton("Reset Game");
+        mainMenu = new JButton("Main Menu");
+        //quitMine = new JButton("Quit Minesweeper"); //based on principle that we complete toolbar
+        inGameHelp = new JButton("Help");
+        
+        addActionListener(refresh, "Reset Game");
+        addActionListener(mainMenu, "Main Menu");
+        addActionListener(inGameHelp, "Help");
+        toolbar.add(mainMenu);
+        toolbar.add(refresh);
+        toolbar.add(inGameHelp);
+    }
 	
 	/**
 	 *  Sets a message on the status bar on the top of the GUI
@@ -230,15 +182,48 @@ public class MineGUI {
 			}
 		});	
 		}
-		else if(action == "Clear Game")
+		else if(action == "Main Menu")
 			{
 				button.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						// Execute when button is pressed
-						createMainMenu();
+                        System.out.println("save");
+                        save();
+                        game.setVisible(false);
+                        inUse = false;
+                        refreshFrame(frame);
+                        createMainMenu();
+                        
+                        menu.setVisible(true);
 			}
 		});	
 		}
+        else if(action == "Reset Game")
+            {
+                button.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        // Execute when button is pressed
+                        createMainMenu();
+                        menu.setVisible(false);
+                        refreshFrame(frame);
+                        int diff = mc.getGrid().getSize();
+                        System.out.println("game size = " + diff);
+                        if (diff ==10)
+                        {
+                            newGame(0);
+                        }
+                        else if (diff ==15)
+                        {
+                            newGame(1);
+                        }
+                        else if (diff ==20)
+                        {
+                            newGame(2);
+                        }
+
+            }
+        });
+        }
 		else if(action == "Help")
 			{
 				button.addActionListener(new ActionListener() {
@@ -248,19 +233,11 @@ public class MineGUI {
 							HelpScreen helpScreen=new HelpScreen(frame, menu);
 							}
 						else{
-							HelpScreen helpScreen = new HelpScreen(frame, pause);
+							HelpScreen helpScreen = new HelpScreen(frame, game);
 							}
 			}
 		});	
 	}
-		else if(action == "Resume"){
-				button.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						// Execute when button is pressed
-						resume();
-					}	
-				});	
-		}
 		else if(action == "Load"){
 			button.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -290,18 +267,17 @@ public class MineGUI {
 				Grid grid=(Grid)one;
 				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 				game = new JPanel(new BorderLayout());			//our game panel e.g. where everything will be put in for this display
-				escapeListener();								//listens for the esc button
-				status= new JLabel("Press esc to pause game"); //Our good label
-				//Messager m = new SOMessager();			
-				mc = new MineComponent(grid, this);	//creates our game interface
-				frame.setSize((65*mc.getGrid().getSize() > screenSize.width
-								? screenSize.width : 65*mc.getGrid().getSize()),
-							  (60*mc.getGrid().getSize() > screenSize.height-30
-								? screenSize.height-30 : 60*mc.getGrid().getSize()));
+				mc = new MineComponent(grid, this);//creates our game interface
+                int gridSize = mc.getGrid().getSize();
+				frame.setSize((65*gridSize > screenSize.width
+								? screenSize.width : 65*gridSize),
+							  (60*gridSize > screenSize.height-30
+								? screenSize.height-30 : 60*gridSize));
 				game.add(mc);							//puts the game in the jPanel
-				game.add(status,BorderLayout.NORTH);	//puts the game status label at the top of the screen
+                JToolBar toolbar = new JToolBar("In-game toolbar");
+                createButtons(toolbar);
+				game.add(toolbar,BorderLayout.NORTH);	//puts the game toolbar at the top of the screen
 				menu.setVisible(false);					//puts the menu away
-				pause.setVisible(false);				//puts the pause menu away
 				frame.getContentPane().add(game);
 				mc.refresh();
 			} catch (ClassNotFoundException e) {
@@ -328,5 +304,10 @@ public class MineGUI {
 	}
     public static void main (String[] args) {
 	MineGUI frame = new MineGUI();
+    }
+    public void refreshFrame(JFrame frame){
+        frame.getContentPane().removeAll();
+        frame.getContentPane().revalidate();
+        frame.getContentPane().repaint();
     }
 }
