@@ -45,15 +45,13 @@ public class MineGUI {
 	 *  This menu includes a start and help button
      */
 	public MineGUI() {
-        System.out.println("called MineGUI");
-		frame = new JFrame();
+        frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		createMainMenu();
 
 		frame.applyComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		frame.setSize(650, 600);
-        System.out.println("next line will make GUI visible");
-		frame.setVisible(true);
+        frame.setVisible(true);
 	}
 
 	/** 
@@ -191,8 +189,15 @@ public class MineGUI {
 						// Execute when button is pressed
                         System.out.println("save");
                         save();
+                        System.out.println("next makes game invisible");
                         game.setVisible(false);
                         inUse = false;
+                        refreshFrame(frame);
+                        System.out.println("next line creates menu");
+                        createMainMenu();
+                        
+                        System.out.println("inuse = " +inUse);
+                        System.out.println("next line makes menu visible");
                         menu.setVisible(true);
 			}
 		});	
@@ -203,6 +208,8 @@ public class MineGUI {
                     public void actionPerformed(ActionEvent e) {
                         // Execute when button is pressed
                         createMainMenu();
+                        menu.setVisible(false);
+                        refreshFrame(frame);
                         int diff = mc.getGrid().getSize();
                         System.out.println("game size = " + diff);
                         if (diff ==10)
@@ -301,5 +308,10 @@ public class MineGUI {
 	}
     public static void main (String[] args) {
 	MineGUI frame = new MineGUI();
+    }
+    public void refreshFrame(JFrame frame){
+        frame.getContentPane().removeAll();
+        frame.getContentPane().revalidate();
+        frame.getContentPane().repaint();
     }
 }

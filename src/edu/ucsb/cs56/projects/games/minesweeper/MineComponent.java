@@ -189,7 +189,7 @@ public class MineComponent extends JComponent
 	    		status = game.gameStatus(status);
 	    		if (status == -1){
 	    			JOptionPane.showMessageDialog(MineComponent.this, 
-	    					"You lose! Press Restart to start a new game.");
+	    					"You lose! Press Reset Game to start a new game.");
 	    			System.out.println("You lose!!");
 	    		}
 	    		else if (status == 1){
@@ -203,7 +203,7 @@ public class MineComponent extends JComponent
 	    			} catch (LineUnavailableException e) {
 	    				e.printStackTrace();
 	    			}
-	    			JOptionPane.showMessageDialog(MineComponent.this, "You win!! Press Restart to start a new game.");
+	    			JOptionPane.showMessageDialog(MineComponent.this, "You win!! Press Reset Game to start a new game.");
 	    			System.out.println("You win!!\n");
 	    		}
 	    	}
@@ -225,7 +225,7 @@ public class MineComponent extends JComponent
 	    		int status = game.gameStatus(0);
 	    		if (status == 1){		
 	    			System.out.println("You win!!\n");
-                    JOptionPane.showMessageDialog(MineComponent.this, "You win!! Press Restart to start a new game.");
+                    JOptionPane.showMessageDialog(MineComponent.this, "You win!! Press Reset Game to start a new game.");
                 }
 	    	}
 	    }
