@@ -189,9 +189,8 @@ public class MineComponent extends JComponent
 	    		status = game.gameStatus(status);
 	    		if (status == -1){
 	    			JOptionPane.showMessageDialog(MineComponent.this, 
-	    					"You lose! Press esc to start a new game.");
+	    					"You lose! Press Restart to start a new game.");
 	    			System.out.println("You lose!!");
-	    			start.setLabel("You lose!!! Press esc to start a New Game");
 	    		}
 	    		else if (status == 1){
 	    			soundName= "resources/sounds/win.wav";
@@ -204,9 +203,8 @@ public class MineComponent extends JComponent
 	    			} catch (LineUnavailableException e) {
 	    				e.printStackTrace();
 	    			}
-	    			JOptionPane.showMessageDialog(MineComponent.this, "You win!! Press esc to start a new game.");
+	    			JOptionPane.showMessageDialog(MineComponent.this, "You win!! Press Restart to start a new game.");
 	    			System.out.println("You win!!\n");
-	    			start.setLabel("You win!!! Press esc to start a New Game");
 	    		}
 	    	}
 	    	else if(event.getButton() == MouseEvent.BUTTON3){
@@ -227,8 +225,8 @@ public class MineComponent extends JComponent
 	    		int status = game.gameStatus(0);
 	    		if (status == 1){		
 	    			System.out.println("You win!!\n");
-	    			start.setLabel("You win!!! Press esc to start a New Game");
-	    		}
+                    JOptionPane.showMessageDialog(MineComponent.this, "You win!! Press Restart to start a new game.");
+                }
 	    	}
 	    }
 	}
