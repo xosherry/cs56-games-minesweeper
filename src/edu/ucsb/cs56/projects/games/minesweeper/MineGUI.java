@@ -8,6 +8,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.Math;
+import java.util.TimerTask;
+import java.util.Timer;
+import java.lang.Object;
+import java.lang.Long;
 
 import javax.swing.*;
 
@@ -36,7 +41,10 @@ public class MineGUI {
 	JPanel menu;	//Menu Panel, initial panel at initial creation of the game e.g. Main Menu
 	JPanel game; 	//Game Panel, where the game is played
 	boolean inUse; //if game is started and in use
-    
+    Clock gClock;
+    JTextField Time;
+    int timeTBPos;
+    Timer timer;
     
 	MineComponent mc; //MineComponent is the actual layout of the game, and what makes the game function
 	JLabel status;		//the game status label that is displayed during the game
@@ -59,7 +67,6 @@ public class MineGUI {
 	 */
 	public void newGame() {
         
-        System.out.println("called new game");
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		game = new JPanel(new BorderLayout());			//our game panel e.g. where everything will be put in for this display
 		Grid grid = new Grid(true);
@@ -68,14 +75,18 @@ public class MineGUI {
 						? screenSize.width : 65*mc.getGrid().getSize()),
 					  (60*mc.getGrid().getSize() > screenSize.height-40
 						? screenSize.height-40 : 60*mc.getGrid().getSize()));
-
+    
         JToolBar toolbar = new JToolBar("In-game toolbar");
-        createButtons(toolbar);
+        createToolbar(toolbar);
+        setTimePos(toolbar);
         game.add(mc);							//puts the game in the jPanel
 		game.add(toolbar,BorderLayout.NORTH);	//puts the game toolbar at the top of the screen
 		menu.setVisible(false);					//puts the menu away
 		frame.getContentPane().add(game);
         inUse = true;
+        timer = new Timer();
+        timer.schedule(new Clock(), 0, 1000);
+
 	}
 
 	public void newGame(int difficulty) {
@@ -89,13 +100,17 @@ public class MineGUI {
 						? screenSize.height-30 : 60*mc.getGrid().getSize()));
         
         JToolBar toolbar = new JToolBar("In-game toolbar");
-        createButtons(toolbar);
+        createToolbar(toolbar);
         game.add(mc);//puts the game in the jPanel
         
 		game.add(toolbar,BorderLayout.NORTH);	//puts the game toolbar label at the top of the screen
 		menu.setVisible(false);					//puts the menu away
 		frame.getContentPane().add(game);
         inUse = true;
+        timer = new Timer();
+        timer.schedule(new Clock(), 0, 1000);
+
+    
 	}
 	
 	/**
@@ -109,7 +124,7 @@ public class MineGUI {
 		medGame = new JButton("New Medium Game");
 		hardGame = new JButton("New Hard Game");
 		help = new JButton("Help");
-		load = new JButton("load last game");
+		load = new JButton("Load Last Game");
 		addActionListener(easyGame, "New Easy Game");
 		addActionListener(medGame, "New Medium Game");
 		addActionListener(hardGame, "New Hard Game");
@@ -124,22 +139,41 @@ public class MineGUI {
         inUse = false;
 	}
     
-    public void createButtons(JToolBar toolbar){
+    public void createToolbar(JToolBar toolbar){
         //make buttons
         
         refresh = new JButton("Reset Game");
         mainMenu = new JButton("Main Menu");
         //quitMine = new JButton("Quit Minesweeper"); //based on principle that we complete toolbar
         inGameHelp = new JButton("Help");
-        
+        gClock = new Clock();
+        Time = new JTextField(gClock.timeElapsed);
+        Time.setColumns(4);
+        Time.setEditable(false);
         addActionListener(refresh, "Reset Game");
         addActionListener(mainMenu, "Main Menu");
         addActionListener(inGameHelp, "Help");
         toolbar.add(mainMenu);
         toolbar.add(refresh);
         toolbar.add(inGameHelp);
+        toolbar.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        toolbar.add(Time);
+        toolbar.setFloatable(false);
     }
 	
+    public void setTimePos(JToolBar toolbar){
+        for (int i = 0; i < toolbar.getComponentCount(); i++) {
+            Component c = toolbar.getComponent(i);
+            if (c instanceof JTextField) {
+                String field_name = c.getName();
+                if (field_name == null) continue;
+                if (field_name.equals("Time")){
+                    timeTBPos = i;
+                    break;
+                }
+            }
+        }
+    }
 	/**
 	 *  Sets a message on the status bar on the top of the GUI
 	 *
@@ -161,7 +195,7 @@ public class MineGUI {
 					public void actionPerformed(ActionEvent e) {
 						// Execute when button is pressed
 						newGame(0);
-			}
+                        			}
 		});	
 		}
 		else if(action == "New Medium Game")
@@ -170,6 +204,8 @@ public class MineGUI {
 					public void actionPerformed(ActionEvent e) {
 						// Execute when button is pressed
 						newGame(1);
+                        timer = new Timer();
+                        timer.schedule(new Clock(), 0, 1000);
 			}
 		});	
 		}
@@ -179,6 +215,8 @@ public class MineGUI {
 					public void actionPerformed(ActionEvent e) {
 						// Execute when button is pressed
 						newGame(2);
+                        timer = new Timer();
+                        timer.schedule(new Clock(), 0, 1000);
 			}
 		});	
 		}
@@ -193,7 +231,9 @@ public class MineGUI {
                         inUse = false;
                         refreshFrame(frame);
                         createMainMenu();
-                        
+                        gClock.pauseClock();
+                        timer.cancel();
+                        timer.purge();
                         menu.setVisible(true);
 			}
 		});	
@@ -204,6 +244,8 @@ public class MineGUI {
                     public void actionPerformed(ActionEvent e) {
                         // Execute when button is pressed
                         createMainMenu();
+                        timer.cancel();
+                        timer.purge();
                         menu.setVisible(false);
                         refreshFrame(frame);
                         int diff = mc.getGrid().getSize();
@@ -229,6 +271,10 @@ public class MineGUI {
 				button.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						// Execute when button is pressed
+                        timer.cancel();
+                        timer.purge();
+                        gClock.pauseClock();
+                        
 						if(inUse==false){
 							HelpScreen helpScreen=new HelpScreen(frame, menu);
 							}
@@ -275,7 +321,7 @@ public class MineGUI {
 								? screenSize.height-30 : 60*gridSize));
 				game.add(mc);							//puts the game in the jPanel
                 JToolBar toolbar = new JToolBar("In-game toolbar");
-                createButtons(toolbar);
+                createToolbar(toolbar);
 				game.add(toolbar,BorderLayout.NORTH);	//puts the game toolbar at the top of the screen
 				menu.setVisible(false);					//puts the menu away
 				frame.getContentPane().add(game);
@@ -305,9 +351,55 @@ public class MineGUI {
     public static void main (String[] args) {
 	MineGUI frame = new MineGUI();
     }
+    
     public void refreshFrame(JFrame frame){
         frame.getContentPane().removeAll();
         frame.getContentPane().revalidate();
         frame.getContentPane().repaint();
+    }
+    
+    public class Clock extends TimerTask{
+        
+        long currClock;
+        long pClock;
+        long endClock;
+        long elapse;
+        final long nano = 1000000000;
+        long sec;
+        long resClock;
+        String timeElapsed;
+        long timeElapsed1;
+        
+        public Clock(){
+            
+            currClock = System.nanoTime();
+        }
+        
+        
+        public void updateTE(){
+        
+            endClock = System.nanoTime(); //long
+            elapse = endClock - currClock; //long
+            sec = Math.floorDiv(elapse, nano); //long
+            timeElapsed = String.valueOf(sec); //long->string
+        }
+        
+        public void pauseClock(){
+            this.updateTE(); //string
+            pClock = Long.parseLong(timeElapsed); //string->long
+        }
+        
+        public void resumeClock(){
+            resClock = System.nanoTime();
+            long diff = resClock - pClock; //long
+            currClock+=diff;
+        }
+        
+        public void run(){
+            this.updateTE(); //updates the string to be displayed
+            Time.setText(timeElapsed);
+            Time.repaint();
+        }
+
     }
 }
