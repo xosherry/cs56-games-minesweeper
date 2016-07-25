@@ -56,7 +56,19 @@ public class MineGUI {
      */
 	public MineGUI() {
         frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent windowEvent) {
+                if (JOptionPane.showConfirmDialog(frame, "Are you sure to close this window?", "Fo real tho?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
+                            save();
+                            System.exit(0);
+                        }
+                else {
+                    frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                }
+                
+            }
+        });
 		createMainMenu();
 
 		frame.applyComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -226,16 +238,8 @@ public class MineGUI {
 				button.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						// Execute when button is pressed
-                        System.out.println("TE12 before timer purge: " +globalTE);
-                        System.out.println("ST12: " + mc.getGrid().saveTime);
-                        
                         timer.cancel();
                         timer.purge();
-                        
-                        System.out.println("save");
-                        System.out.println("TE13: after timer purge, before save call" + globalTE);
-                        System.out.println("ST13: " + mc.getGrid().saveTime);
-                        
                         
                         save();
                         game.setVisible(false);
@@ -243,15 +247,7 @@ public class MineGUI {
                         refreshFrame(frame);
                         createMainMenu();
                        
-                        
-                        System.out.println("TE5 after save call, before pause clock: " + globalTE);
-                        System.out.println("ST5: " + mc.getGrid().saveTime);
-                        
                         gClock.pauseClock();
-                        
-                        
-                        System.out.println("TE6 after pause clock: " + globalTE);
-                        System.out.println("ST6: " + mc.getGrid().saveTime);
                         
                         menu.setVisible(true);
 			}
@@ -268,7 +264,6 @@ public class MineGUI {
                         menu.setVisible(false);
                         refreshFrame(frame);
                         int diff = mc.getGrid().getSize();
-                        System.out.println("game size = " + diff);
                         if (diff ==10)
                         {
                             newGame(0);
@@ -350,15 +345,12 @@ public class MineGUI {
 				menu.setVisible(false);					//puts the menu away
 				frame.getContentPane().add(game);
 				mc.refresh();
+                inUse = true;
                 globalTE = grid.saveTime;
 
-                System.out.println("TE1 before load timer sched: " + globalTE);
-                System.out.println("ST1: " +grid.saveTime);
                 timer = new Timer();
                 timer.schedule(new Clock(), 0, 1000);
                 
-                System.out.println("TE2 after load timer sched: " +globalTE);
-                System.out.println("ST2: " +grid.saveTime);
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -371,20 +363,27 @@ public class MineGUI {
 		}
 	}
 	public void save(){
-        System.out.println("TE10 Before save assign: " + globalTE);
-        System.out.println("ST10: " + mc.getGrid().saveTime);
-        mc.getGrid().saveTime = globalTE;
+       
         System.out.println("TE11 after save assign: " + globalTE);
-        System.out.println("ST11: " + mc.getGrid().saveTime);
-        try{
-			FileOutputStream fileStream=new FileOutputStream("MyGame.ser");
-			ObjectOutputStream os = new ObjectOutputStream(fileStream);
-			os.writeObject(mc.getGrid());
-            os.close();
-		}
-		catch(Exception ex){
-			ex.printStackTrace();
-		}
+        //System.out.println("ST11: " + mc.getGrid().saveTime);
+
+        if (mc!=null){
+            mc.getGrid().saveTime = globalTE;
+            System.out.println("TE11 after save assign: " + globalTE);
+        //System.out.println("ST11: " + mc.getGrid().saveTime);
+            try{
+                FileOutputStream fileStream=new FileOutputStream("MyGame.ser");
+                ObjectOutputStream os = new ObjectOutputStream(fileStream);
+                os.writeObject(mc.getGrid());
+                os.close();
+            }
+            catch(Exception ex){
+                ex.printStackTrace();
+            }
+        }
+        else {
+            System.exit(0);
+        }
 	}
     public static void main (String[] args) {
 	MineGUI frame = new MineGUI();
