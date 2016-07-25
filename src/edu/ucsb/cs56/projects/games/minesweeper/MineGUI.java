@@ -45,6 +45,8 @@ public class MineGUI {
     JTextField Time;
     int timeTBPos;
     Timer timer;
+    String globalTE = new String("0");
+    
     
 	MineComponent mc; //MineComponent is the actual layout of the game, and what makes the game function
 	JLabel status;		//the game status label that is displayed during the game
@@ -67,6 +69,7 @@ public class MineGUI {
 	 */
 	public void newGame() {
         
+        globalTE = "0";
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		game = new JPanel(new BorderLayout());			//our game panel e.g. where everything will be put in for this display
 		Grid grid = new Grid(true);
@@ -90,6 +93,7 @@ public class MineGUI {
 	}
 
 	public void newGame(int difficulty) {
+        globalTE = "0";
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		game = new JPanel(new BorderLayout());			//our game panel e.g. where everything will be put in for this display
         Grid grid = new Grid(true, difficulty);
@@ -107,6 +111,7 @@ public class MineGUI {
 		menu.setVisible(false);					//puts the menu away
 		frame.getContentPane().add(game);
         inUse = true;
+        
         timer = new Timer();
         timer.schedule(new Clock(), 0, 1000);
 
@@ -147,7 +152,7 @@ public class MineGUI {
         //quitMine = new JButton("Quit Minesweeper"); //based on principle that we complete toolbar
         inGameHelp = new JButton("Help");
         gClock = new Clock();
-        Time = new JTextField(gClock.timeElapsed);
+        Time = new JTextField(globalTE);
         Time.setColumns(4);
         Time.setEditable(false);
         addActionListener(refresh, "Reset Game");
@@ -204,8 +209,6 @@ public class MineGUI {
 					public void actionPerformed(ActionEvent e) {
 						// Execute when button is pressed
 						newGame(1);
-                        timer = new Timer();
-                        timer.schedule(new Clock(), 0, 1000);
 			}
 		});	
 		}
@@ -215,8 +218,6 @@ public class MineGUI {
 					public void actionPerformed(ActionEvent e) {
 						// Execute when button is pressed
 						newGame(2);
-                        timer = new Timer();
-                        timer.schedule(new Clock(), 0, 1000);
 			}
 		});	
 		}
@@ -225,15 +226,33 @@ public class MineGUI {
 				button.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						// Execute when button is pressed
+                        System.out.println("TE12 before timer purge: " +globalTE);
+                        System.out.println("ST12: " + mc.getGrid().saveTime);
+                        
+                        timer.cancel();
+                        timer.purge();
+                        
                         System.out.println("save");
+                        System.out.println("TE13: after timer purge, before save call" + globalTE);
+                        System.out.println("ST13: " + mc.getGrid().saveTime);
+                        
+                        
                         save();
                         game.setVisible(false);
                         inUse = false;
                         refreshFrame(frame);
                         createMainMenu();
+                       
+                        
+                        System.out.println("TE5 after save call, before pause clock: " + globalTE);
+                        System.out.println("ST5: " + mc.getGrid().saveTime);
+                        
                         gClock.pauseClock();
-                        timer.cancel();
-                        timer.purge();
+                        
+                        
+                        System.out.println("TE6 after pause clock: " + globalTE);
+                        System.out.println("ST6: " + mc.getGrid().saveTime);
+                        
                         menu.setVisible(true);
 			}
 		});	
@@ -271,9 +290,14 @@ public class MineGUI {
 				button.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						// Execute when button is pressed
-                        timer.cancel();
-                        timer.purge();
-                        gClock.pauseClock();
+                        
+                        // the next 3 commands pause the game but
+                        // we have no way of resuming once back
+                        // is pressed
+                        
+                        //timer.cancel();
+                        //timer.purge();
+                        //gClock.pauseClock();
                         
 						if(inUse==false){
 							HelpScreen helpScreen=new HelpScreen(frame, menu);
@@ -308,7 +332,7 @@ public class MineGUI {
 			FileInputStream fileStream = new FileInputStream("MyGame.ser");
 			ObjectInputStream os = new ObjectInputStream(fileStream);
 			Object one;
-			try {
+            try {
 				one = os.readObject();
 				Grid grid=(Grid)one;
 				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -326,6 +350,15 @@ public class MineGUI {
 				menu.setVisible(false);					//puts the menu away
 				frame.getContentPane().add(game);
 				mc.refresh();
+                globalTE = grid.saveTime;
+
+                System.out.println("TE1 before load timer sched: " + globalTE);
+                System.out.println("ST1: " +grid.saveTime);
+                timer = new Timer();
+                timer.schedule(new Clock(), 0, 1000);
+                
+                System.out.println("TE2 after load timer sched: " +globalTE);
+                System.out.println("ST2: " +grid.saveTime);
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -338,11 +371,16 @@ public class MineGUI {
 		}
 	}
 	public void save(){
-		try{
+        System.out.println("TE10 Before save assign: " + globalTE);
+        System.out.println("ST10: " + mc.getGrid().saveTime);
+        mc.getGrid().saveTime = globalTE;
+        System.out.println("TE11 after save assign: " + globalTE);
+        System.out.println("ST11: " + mc.getGrid().saveTime);
+        try{
 			FileOutputStream fileStream=new FileOutputStream("MyGame.ser");
 			ObjectOutputStream os = new ObjectOutputStream(fileStream);
 			os.writeObject(mc.getGrid());
-			os.close();
+            os.close();
 		}
 		catch(Exception ex){
 			ex.printStackTrace();
@@ -361,32 +399,52 @@ public class MineGUI {
     public class Clock extends TimerTask{
         
         long currClock;
-        long pClock;
+        long pClock=0;
         long endClock;
         long elapse;
         final long nano = 1000000000;
         long sec;
         long resClock;
         String timeElapsed;
-        long timeElapsed1;
+        //long timeElapsed1;
+        String leftOver = new String("");
         
         public Clock(){
             
+            leftOver = globalTE;
+            globalTE = "0";
             currClock = System.nanoTime();
+            
         }
         
         
         public void updateTE(){
         
+            System.out.println("TE3 in update: " + globalTE);
+            System.out.println("ST3: " + mc.getGrid().saveTime);
+            System.out.println("CurrClock: " + mc.getGrid().saveTime);
             endClock = System.nanoTime(); //long
             elapse = endClock - currClock; //long
+//            
+//            System.out.println("CurrClock: " + mc.getGrid().saveTime);
+//            System.out.println("elapse: " + mc.getGrid().saveTime);
+//
             sec = Math.floorDiv(elapse, nano); //long
-            timeElapsed = String.valueOf(sec); //long->string
+            globalTE = String.valueOf(sec + Long.parseLong(leftOver)); //long->string
         }
         
         public void pauseClock(){
-            this.updateTE(); //string
-            pClock = Long.parseLong(timeElapsed); //string->long
+            System.out.println("TE3 in pause before assignment: " + globalTE);
+            System.out.println("ST3: " + mc.getGrid().saveTime);
+            
+            
+            mc.getGrid().saveTime = globalTE;
+            
+            
+            System.out.println("TE4 in pause after assignment :" + globalTE);
+            System.out.println("ST4: " + mc.getGrid().saveTime);
+            //this.updateTE(); //string
+            //pClock = Long.parseLong(timeElapsed); //string->long
         }
         
         public void resumeClock(){
@@ -396,10 +454,17 @@ public class MineGUI {
         }
         
         public void run(){
+            System.out.println("TE8 before update : " + globalTE);
+            System.out.println("ST8: " + mc.getGrid().saveTime);
+            
             this.updateTE(); //updates the string to be displayed
-            Time.setText(timeElapsed);
+            
+            System.out.println("TE9 after update: " + globalTE);
+            System.out.println("ST9: " + mc.getGrid().saveTime);
+            Time.setText(globalTE);
             Time.repaint();
         }
 
     }
+    
 }
