@@ -168,7 +168,7 @@ public class MineComponent extends JComponent
 	    			System.out.println("You win!\n");
 	    		}
 	    	}
-            else if (event.getButton() == MouseEvent.BUTTON1 && game.isFlag(num)){
+            else if (event.getButton() == MouseEvent.BUTTON1 && (game.isFlag(num) | game.isOpen(num))){
                 game.searchBox(num);
                 soundName = "resources/sounds/userError.wav";
                 playSound(soundName);

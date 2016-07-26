@@ -254,27 +254,29 @@ public class MineGUI {
             {
                 button.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        if (overwriteSavePrompt(frame)){
-                            createMainMenu();
-                            timer.cancel();
-                            timer.purge();
-                            menu.setVisible(false);
-                            refreshFrame(frame);
-                            int diff = mc.getGrid().getSize();
-                            if (diff ==10)
-                            {
-                                newGame(0);
+                        //if (grid.gameStatus(0) == 0){
+                            if (overwriteSavePrompt(frame)){
+                                createMainMenu();
+                                timer.cancel();
+                                timer.purge();
+                                menu.setVisible(false);
+                                refreshFrame(frame);
+                                int diff = mc.getGrid().getSize();
+                                if (diff ==10)
+                                {
+                                    newGame(0);
+                                }
+                                else if (diff ==15)
+                                {
+                                    newGame(1);
+                                }
+                                else if (diff ==20)
+                                {
+                                    newGame(2);
+                                }
                             }
-                            else if (diff ==15)
-                            {
-                                newGame(1);
-                            }
-                            else if (diff ==20)
-                            {
-                                newGame(2);
-                            }
-                        }
-                        else {};
+                            else {};
+                        //}
 
             }
         });
