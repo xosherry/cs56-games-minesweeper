@@ -144,7 +144,7 @@ public class MineComponent extends JComponent
 		String soundName;  
 		AudioInputStream audioInputStream;
 	    if(game.gameStatus(status) == 0){
-	    	if(event.getButton() == MouseEvent.BUTTON1){
+	    	if(event.getButton() == MouseEvent.BUTTON1 && !game.isFlag(num) && !game.isOpen(num)){
 	    		char box=game.searchBox(num);
 	    		if (box=='X'){
 	    			soundName= "resources/sounds/explosion.wav";
@@ -152,40 +152,9 @@ public class MineComponent extends JComponent
 	    		else{
 	    			soundName="resources/sounds/clicked.wav";
 	    		}
-	    		try {
-	    			audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());			clip = AudioSystem.getClip();
-	    			clip.open(audioInputStream);
-	    			clip.start();
-	    			} 
-	    		catch (UnsupportedAudioFileException | IOException e) {
-	    			e.printStackTrace();
-	    		} 
-	    		catch (LineUnavailableException e) {
-	    			e.printStackTrace();
-	    		}
-	    		refresh();
-	    		/*
-	    		for(int i=0; i< size; i++){
-	    			for(int j=0; j< size; j++){
-	    				JButton jb = buttons[i][j];
-	    				if(game.getCell(i*size+j) != '?'){
-	    					jb.setFont(new Font("sansserif",Font.BOLD,
-	    							jb.getSize().height/2));
-	    					if (game.getCell(i*size+j) == 48)
-	    						jb.setForeground(zero);
-	    					else if (game.getCell(i*size+j) == 70)
-	    						jb.setForeground(Color.RED);
-	    					else if (game.getCell(i*size+j) == 88)
-	    						jb.setForeground(Color.BLACK);
-	    					else
-	    						jb.setForeground(number);
-	    					
-	    					jb.setText(Character.toString(game.getCell(i*size+j)));
-	    				}
-	    			}
-	    		}
-	    		*/
-
+                playSound(soundName);
+                refresh();
+	    		
 	    		status = game.gameStatus(status);
 	    		if (status == -1){
 	    			JOptionPane.showMessageDialog(MineComponent.this, 
@@ -194,19 +163,17 @@ public class MineComponent extends JComponent
 	    		}
 	    		else if (status == 1){
 	    			soundName= "resources/sounds/win.wav";
-	    			try {
-	    				audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());			clip = AudioSystem.getClip();
-	    				clip.open(audioInputStream);
-	    				clip.start();
-	    			} catch (UnsupportedAudioFileException | IOException e) {
-	    				e.printStackTrace();
-	    			} catch (LineUnavailableException e) {
-	    				e.printStackTrace();
-	    			}
-	    			JOptionPane.showMessageDialog(MineComponent.this, "You win! Press 'Reset Game' to start a new game.", "Victory!", JOptionPane.INFORMATION_MESSAGE);
+                    playSound(soundName);
+                    JOptionPane.showMessageDialog(MineComponent.this, "You win! Press 'Reset Game' to start a new game.", "Victory!", JOptionPane.INFORMATION_MESSAGE);
 	    			System.out.println("You win!\n");
 	    		}
 	    	}
+            else if (event.getButton() == MouseEvent.BUTTON1 && game.isFlag(num)){
+                game.searchBox(num);
+                soundName = "resources/sounds/userError.wav";
+                playSound(soundName);
+
+            }
 	    	else if(event.getButton() == MouseEvent.BUTTON3){
 	    		if(game.isFlag(num)){
 	    			game.deflagBox(num);
@@ -215,22 +182,49 @@ public class MineComponent extends JComponent
 	    			jb.setForeground(Color.BLACK);
 	    			jb.setText(""); 
 	    		}	    
-	    		else if(!(game.isOpen(num))){
+	    		else if (!game.isOpen(num)){
+                    soundName = "resources/sounds/place_flag.wav";
+                    playSound(soundName);
 	    			game.flagBox(num);
 	    			JButton jb = buttons[num/size][num%size];
-	    			jb.setFont(new Font("sansserif",Font.BOLD,30));
+	    			jb.setFont(new Font("sansserif",Font.BOLD,15));
 	    			jb.setForeground(Color.RED);
 	    			jb.setText("F"); 
 	    		}
+                else {
+                    game.flagBox(num);
+                    soundName = "resources/sounds/userError.wav";
+                    playSound(soundName);
+                }
 	    		int status = game.gameStatus(0);
 	    		if (status == 1){		
 	    			System.out.println("You win!\n");
                     JOptionPane.showMessageDialog(MineComponent.this, "You win! Press 'Reset Game' to start a new game.", "Victory!", JOptionPane.INFORMATION_MESSAGE);
                 }
 	    	}
+            else if (event.getButton() == MouseEvent.BUTTON1 && game.isOpen(num)){
+                
+                soundName = "resources/sounds/userError.wav";
+                playSound(soundName);
+            }
 	    }
 	}
 	
+    }
+
+    public void playSound(String dir){
+        Clip clip;
+        AudioInputStream audioInputStream;
+        try {
+            audioInputStream = AudioSystem.getAudioInputStream(new File(dir).getAbsoluteFile());			clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.start();
+        } catch (UnsupportedAudioFileException | IOException e) {
+            e.printStackTrace();
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        }
+
     }
     public void refresh(){
 		for(int i=0; i< size; i++){
