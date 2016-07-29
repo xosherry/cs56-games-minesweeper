@@ -43,3 +43,7 @@ To run the TextGame, use "ant textmine".
 W16 Final Remarks
 =============================================================================
 The coding style was not what I was accustom to so when I was reading through the code, I tabbed and rearranged stuff just so I could read it, however I didn't do that for all the code so beware there are atleast 2 styles here.   
+=============================================================================
+M16 Final Remarks
+=============================================================================
+Depending on the issue being addressed, it was helpful to identify which classes needed changes (adding/removind features). There are a handful of files (some that deal with GUI, another that sets up and modifies the grid/map, etc.) so reading through the code multiple times line by line while running the program will help you to understand what each part of the code is doing and how it needs to be changed to accomodate the issue. Possible features to be added along with potential bugs are listed in the "Issues" of the master repo, these include but are not limited to (#30)adding a highscore feature and (#34)exposing all mines on the display when the player loses.
