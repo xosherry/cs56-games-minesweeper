@@ -16,8 +16,10 @@ import java.io.Serializable;
 
 */
 public class Grid implements Serializable{
-    
-	final int EASY_SIZE = 10;
+    //
+    String saveTime = new String("0");
+    //
+    final int EASY_SIZE = 10;
     final int MED_SIZE = 15;
     final int HARD_SIZE = 20;
 
@@ -207,7 +209,7 @@ public class Grid implements Serializable{
 
     public boolean isOpen(int i) throws IllegalArgumentException {
 	if( i >= 0 && i <= (size*size)-1){
-	    if(map[i/size][i%size]  != '?')
+	    if(map[i/size][i%size]  != '?' && map[i/size][i%size] != 'F')
 		return true;
 	    else
 		return false;
@@ -283,11 +285,11 @@ public class Grid implements Serializable{
 	    return;
 	}
 	else if(isOpen(box)){
-	    System.out.println("You cannot put a flag on an opened box!");
+        System.out.println("You cannot put a flag on an opened box!");
 	    return;
 	}
 	else{
-	    map[box/size][box%size] = 'F';
+        map[box/size][box%size] = 'F';
 	    return;
 	}
     }

@@ -9,7 +9,7 @@ Code prior to W14: https://foo.cs.ucsb.edu/cs56/issues/0000900/
 project history
 ===============
 ```
-W16 Athielk 4pm | athielk | W14 | calebnelson | andrewberls 4pm | jgee67, davidacevedo | (pconrad) Minesweeper game
+M16 hwangaustin | ije896 | saisrimat | W16 Athielk 4pm | athielk | W14 | calebnelson | andrewberls 4pm | jgee67, davidacevedo | (pconrad) Minesweeper game
 ```
 
 
@@ -17,7 +17,7 @@ W16 Athielk 4pm | athielk | W14 | calebnelson | andrewberls 4pm | jgee67, davida
 High-level description
 ==============================================================================
 
-This is a program that runs the game minesweeper. Currently, the game itself is able to be played. The game can be played via gui or through text, depending on the user's preference. There is a start menu, with three buttons: new game, help, and quit. Selecting new game will start a new game. Selecting help will bring the user to a page with instructions of how to play. Quit exits the program. During a game, the user can press esc at any time to pause the game. From here the user can resume, start a new game, or quit. Once the game is over, the user gets a message indicating whetheer he/she won or lost. The user can then press esc to return to the main menu. 
+This is a program that runs the game minesweeper. Currently, the game itself is able to be played. The game can be played via GUI or through text, depending on the user's preference. There is a start menu, with six buttons: new game (with three separate difficulties), help, load, and quit. Selecting new game will start a new game. Selecting help will bring the user to a page with instructions of how to play. Quit exits the program. During a game, the user can choose reset game, exit minesweeper, or main menu the in-game toolbar at the top of the game. Once the game is over, the user gets a message indicating whetheer he/she won or lost. The user can then choose an option from the toolbar to continue with their game.
 
 ==============================================================================
 Developer Notes/Documentation
@@ -39,7 +39,13 @@ How to Run
 
 To run the GuiGame, use "ant mine".
 To run the TextGame, use "ant textmine".
+
 ==============================================================================
 W16 Final Remarks
 =============================================================================
 The coding style was not what I was accustom to so when I was reading through the code, I tabbed and rearranged stuff just so I could read it, however I didn't do that for all the code so beware there are atleast 2 styles here.   
+
+==============================================================================
+M16 Final Remarks
+=============================================================================
+Depending on the issue being addressed, it was helpful to identify which classes needed changes (adding/removing features). There are a handful of files (some that deal with GUI, another that sets up and modifies the grid/map, etc.) so reading through the code multiple times line by line while running the program will help you to understand what each part of the code is doing and how it needs to be changed to accomodate the issue. Possible features to be added along with potential bugs are listed in the "Issues" of the master repo, these include but are not limited to (#30)adding a highscore feature and (#34)exposing all mines on the display when the player loses.

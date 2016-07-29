@@ -8,6 +8,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.Math;
+import java.util.TimerTask;
+import java.util.Timer;
+import java.lang.Object;
+import java.lang.Long;
 
 import javax.swing.*;
 
@@ -36,6 +41,11 @@ public class MineGUI {
 	JPanel menu;	//Menu Panel, initial panel at initial creation of the game e.g. Main Menu
 	JPanel game; 	//Game Panel, where the game is played
 	boolean inUse; //if game is started and in use
+    Clock gClock;
+    JTextField Time;
+    int timeTBPos;
+    Timer timer;
+    String globalTE = new String("0");
     
     
 	MineComponent mc; //MineComponent is the actual layout of the game, and what makes the game function
@@ -46,7 +56,20 @@ public class MineGUI {
      */
 	public MineGUI() {
         frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent windowEvent) {
+                if (JOptionPane.showConfirmDialog(frame, "Are you sure you want to quit the game?", "Quit?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION)
+                    {
+                        save();
+                        System.exit(0);
+                    }
+                else {
+                    frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                }
+                
+            }
+        });
 		createMainMenu();
 
 		frame.applyComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -59,7 +82,7 @@ public class MineGUI {
 	 */
 	public void newGame() {
         
-        System.out.println("called new game");
+        globalTE = "0";
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		game = new JPanel(new BorderLayout());			//our game panel e.g. where everything will be put in for this display
 		Grid grid = new Grid(true);
@@ -68,34 +91,41 @@ public class MineGUI {
 						? screenSize.width : 65*mc.getGrid().getSize()),
 					  (60*mc.getGrid().getSize() > screenSize.height-40
 						? screenSize.height-40 : 60*mc.getGrid().getSize()));
-
+    
         JToolBar toolbar = new JToolBar("In-game toolbar");
-        createButtons(toolbar);
+        createToolbar(toolbar);
         game.add(mc);							//puts the game in the jPanel
 		game.add(toolbar,BorderLayout.NORTH);	//puts the game toolbar at the top of the screen
 		menu.setVisible(false);					//puts the menu away
 		frame.getContentPane().add(game);
         inUse = true;
+        timer = new Timer();
+        timer.schedule(new Clock(), 0, 1000);
+
 	}
 
 	public void newGame(int difficulty) {
+        globalTE = "0";
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		game = new JPanel(new BorderLayout());			//our game panel e.g. where everything will be put in for this display
+		game = new JPanel(new BorderLayout());      //our game panel e.g. where everything will be put in for this display
         Grid grid = new Grid(true, difficulty);
-		mc = new MineComponent(grid, this);	//creates our game interface
+		mc = new MineComponent(grid, this);         //creates our game interface
 		frame.setSize((65*mc.getGrid().getSize() > screenSize.width
 						? screenSize.width : 65*mc.getGrid().getSize()),
 					  (60*mc.getGrid().getSize() > screenSize.height-30
 						? screenSize.height-30 : 60*mc.getGrid().getSize()));
         
         JToolBar toolbar = new JToolBar("In-game toolbar");
-        createButtons(toolbar);
-        game.add(mc);//puts the game in the jPanel
-        
+        createToolbar(toolbar);
+        game.add(mc);               //puts the game in the jPanel
 		game.add(toolbar,BorderLayout.NORTH);	//puts the game toolbar label at the top of the screen
 		menu.setVisible(false);					//puts the menu away
 		frame.getContentPane().add(game);
         inUse = true;
+        timer = new Timer();
+        timer.schedule(new Clock(), 0, 1000);
+
+    
 	}
 	
 	/**
@@ -104,42 +134,52 @@ public class MineGUI {
 	public void createMainMenu(){
         frame.setSize(650, 600);
 		menu = new JPanel(new GridLayout(4,0));		//our 2 section grid layout for our main menu
-
+        quitMine = new JButton("Quit Minesweeper");
 		easyGame = new JButton("New Easy Game");
 		medGame = new JButton("New Medium Game");
 		hardGame = new JButton("New Hard Game");
 		help = new JButton("Help");
-		load = new JButton("load last game");
+		load = new JButton("Load Last Game");
 		addActionListener(easyGame, "New Easy Game");
 		addActionListener(medGame, "New Medium Game");
 		addActionListener(hardGame, "New Hard Game");
 		addActionListener(help, "Help");
-		addActionListener(load,"Load");	
+		addActionListener(load,"Load");
+        addActionListener(quitMine, "Quit Minesweeper");
 		menu.add(easyGame);
 		menu.add(medGame);
 		menu.add(hardGame);
 		menu.add(load);
 		menu.add(help);
+        menu.add(quitMine);
 		frame.getContentPane().add(menu);
         inUse = false;
 	}
     
-    public void createButtons(JToolBar toolbar){
+    public void createToolbar(JToolBar toolbar){
         //make buttons
         
         refresh = new JButton("Reset Game");
         mainMenu = new JButton("Main Menu");
-        //quitMine = new JButton("Quit Minesweeper"); //based on principle that we complete toolbar
+        quitMine = new JButton("Quit Minesweeper");
         inGameHelp = new JButton("Help");
-        
+        gClock = new Clock();
+        Time = new JTextField(globalTE);
+        Time.setColumns(4);
+        Time.setEditable(false);
         addActionListener(refresh, "Reset Game");
         addActionListener(mainMenu, "Main Menu");
         addActionListener(inGameHelp, "Help");
+        addActionListener(quitMine, "Quit Minesweeper");
         toolbar.add(mainMenu);
         toolbar.add(refresh);
         toolbar.add(inGameHelp);
+        toolbar.add(quitMine);
+        toolbar.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        toolbar.add(Time);
+        toolbar.setFloatable(false);
     }
-	
+
 	/**
 	 *  Sets a message on the status bar on the top of the GUI
 	 *
@@ -159,17 +199,18 @@ public class MineGUI {
 			{
 				button.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						// Execute when button is pressed
-						newGame(0);
-			}
+						if (overwriteSavePrompt(frame)) newGame(0);
+                        else {};
+                        
+                    }
 		});	
 		}
 		else if(action == "New Medium Game")
 			{
 				button.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						// Execute when button is pressed
-						newGame(1);
+						if (overwriteSavePrompt(frame)) newGame(1);
+                        else {};
 			}
 		});	
 		}
@@ -177,8 +218,8 @@ public class MineGUI {
 			{
 				button.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						// Execute when button is pressed
-						newGame(2);
+						if (overwriteSavePrompt(frame)) newGame(2);
+                        else {};
 			}
 		});	
 		}
@@ -186,40 +227,56 @@ public class MineGUI {
 			{
 				button.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						// Execute when button is pressed
-                        System.out.println("save");
+						timer.cancel();
+                        timer.purge();
                         save();
                         game.setVisible(false);
                         inUse = false;
                         refreshFrame(frame);
                         createMainMenu();
-                        
+                        gClock.pauseClock();
                         menu.setVisible(true);
 			}
-		});	
-		}
+		});
+        
+        }
+        else if(action == "Quit Minesweeper")
+            {
+                button.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        quitPrompt(frame);
+            }
+        });
+            
+    }
+
         else if(action == "Reset Game")
             {
                 button.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        // Execute when button is pressed
-                        createMainMenu();
-                        menu.setVisible(false);
-                        refreshFrame(frame);
-                        int diff = mc.getGrid().getSize();
-                        System.out.println("game size = " + diff);
-                        if (diff ==10)
-                        {
-                            newGame(0);
-                        }
-                        else if (diff ==15)
-                        {
-                            newGame(1);
-                        }
-                        else if (diff ==20)
-                        {
-                            newGame(2);
-                        }
+                        //if (grid.gameStatus(0) == 0){
+                            if (overwriteSavePrompt(frame)){
+                                createMainMenu();
+                                timer.cancel();
+                                timer.purge();
+                                menu.setVisible(false);
+                                refreshFrame(frame);
+                                int diff = mc.getGrid().getSize();
+                                if (diff ==10)
+                                {
+                                    newGame(0);
+                                }
+                                else if (diff ==15)
+                                {
+                                    newGame(1);
+                                }
+                                else if (diff ==20)
+                                {
+                                    newGame(2);
+                                }
+                            }
+                            else {};
+                        //}
 
             }
         });
@@ -228,7 +285,6 @@ public class MineGUI {
 			{
 				button.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						// Execute when button is pressed
 						if(inUse==false){
 							HelpScreen helpScreen=new HelpScreen(frame, menu);
 							}
@@ -241,8 +297,6 @@ public class MineGUI {
 		else if(action == "Load"){
 			button.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					// Execute when button is pressed
-					System.out.println("load");
 					load();
 				}	
 			});
@@ -250,19 +304,47 @@ public class MineGUI {
 		else if(action == "Save"){
 			button.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					// Execute when button is pressed
-					System.out.println("save");
 					save();
 				}	
 			});	
 		}
 }
+    public void quitPrompt(JFrame frame){
+        int response = JOptionPane.showConfirmDialog(frame, "Are you sure you want to quit the game?", "Quit?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (response == JOptionPane.YES_OPTION)
+        {
+            save();
+            System.out.println("Closing...");
+            System.exit(0);
+        }
+        else
+        {
+            frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        }
+
+    }
+    
+    public boolean overwriteSavePrompt(JFrame frame){
+        int response = JOptionPane.showConfirmDialog(frame, "Are you sure you want to do this? This will delete previous save data", "Overwriting Save", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (response == JOptionPane.YES_OPTION)
+        {
+            return true;
+        }
+        else
+        {
+            frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            return false;
+        }
+        
+    }
+
 	public void load(){
+        System.out.println("Loading...");
 		try {
 			FileInputStream fileStream = new FileInputStream("MyGame.ser");
 			ObjectInputStream os = new ObjectInputStream(fileStream);
 			Object one;
-			try {
+            try {
 				one = os.readObject();
 				Grid grid=(Grid)one;
 				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -275,11 +357,17 @@ public class MineGUI {
 								? screenSize.height-30 : 60*gridSize));
 				game.add(mc);							//puts the game in the jPanel
                 JToolBar toolbar = new JToolBar("In-game toolbar");
-                createButtons(toolbar);
+                createToolbar(toolbar);
 				game.add(toolbar,BorderLayout.NORTH);	//puts the game toolbar at the top of the screen
 				menu.setVisible(false);					//puts the menu away
 				frame.getContentPane().add(game);
 				mc.refresh();
+                inUse = true;
+                globalTE = grid.saveTime;
+
+                timer = new Timer();
+                timer.schedule(new Clock(), 0, 1000);
+                
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -292,22 +380,77 @@ public class MineGUI {
 		}
 	}
 	public void save(){
-		try{
-			FileOutputStream fileStream=new FileOutputStream("MyGame.ser");
-			ObjectOutputStream os = new ObjectOutputStream(fileStream);
-			os.writeObject(mc.getGrid());
-			os.close();
-		}
-		catch(Exception ex){
-			ex.printStackTrace();
-		}
+
+        if (mc!=null){
+            System.out.println("Saving...");
+            mc.getGrid().saveTime = globalTE;
+            try{
+                FileOutputStream fileStream=new FileOutputStream("MyGame.ser");
+                ObjectOutputStream os = new ObjectOutputStream(fileStream);
+                os.writeObject(mc.getGrid());
+                os.close();
+            }
+            catch(Exception ex){
+                ex.printStackTrace();
+            }
+        }
+        else {
+            System.exit(0);
+        }
 	}
     public static void main (String[] args) {
 	MineGUI frame = new MineGUI();
     }
+    
     public void refreshFrame(JFrame frame){
         frame.getContentPane().removeAll();
         frame.getContentPane().revalidate();
         frame.getContentPane().repaint();
     }
+    
+    public class Clock extends TimerTask{
+        
+        long currClock;
+        long pClock=0;
+        long endClock;
+        long elapse;
+        final long nano = 1000000000;
+        long sec;
+        long resClock;
+        String timeElapsed;
+        String leftOver = new String("");
+        
+        public Clock(){
+            
+            leftOver = globalTE;
+            globalTE = "0";
+            currClock = System.nanoTime();
+            
+        }
+        
+        
+        public void updateTE(){
+        
+            endClock = System.nanoTime();
+            elapse = endClock - currClock;
+            sec = Math.floorDiv(elapse, nano);
+            globalTE = String.valueOf(sec + Long.parseLong(leftOver));
+        }
+        
+        public void pauseClock(){
+            
+            
+            mc.getGrid().saveTime = globalTE;
+            
+        }
+        
+        public void run(){
+            this.updateTE();
+            
+            Time.setText(globalTE);
+            Time.repaint();
+        }
+
+    }
+    
 }
