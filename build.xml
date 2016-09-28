@@ -61,9 +61,6 @@
     </junit>
   </target>
   
-  <target name="run" depends="compile" description="runs the class GameStart">
-     <echo>Please use either ant mine to run MineSweeper with a GUI interface or use ant textmine to run it with a command-line interface</echo>
-  </target>
 
  <target name="mine" depends="compile" description="runs the class MineGUI for graphical minesweeper">
     <java classname="edu.ucsb.cs56.projects.games.minesweeper.${MainClassGui}" fork="true" classpath="build" />
