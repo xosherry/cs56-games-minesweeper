@@ -377,8 +377,7 @@ public class MineGUI {
 
 	public void resetGame() {
         createMainMenu();
-        timer.cancel();
-        timer.purge();
+        stopTimer();
         menu.setVisible(false);
         refreshFrame(frame);
         int diff = mc.getGrid().getSize();
@@ -397,8 +396,7 @@ public class MineGUI {
     }
 
     public void goToMainMenu() {
-                timer.cancel();
-                timer.purge();
+                stopTimer();
                 save();
                 game.setVisible(false);
                 inUse = false;
@@ -408,6 +406,10 @@ public class MineGUI {
                 menu.setVisible(true);
     }
 
+    public void stopTimer() {
+        timer.cancel();
+        timer.purge();
+    }
 
     public static void main (String[] args) {
 	MineGUI frame = new MineGUI();

@@ -156,6 +156,8 @@ public class MineComponent extends JComponent
 	    		status = game.gameStatus(status);
 
 				if (status == -1){
+					start.stopTimer();
+
 					int response = JOptionPane.showOptionDialog(null,
 							"You lose! Press 'Reset Game' to start a new game.",
 							"Defeat!",
@@ -179,6 +181,8 @@ public class MineComponent extends JComponent
 				else if (status == 1){
 					soundName= "resources/sounds/win.wav";
 					playSound(soundName);
+
+					start.stopTimer();
 
 					int response = JOptionPane.showOptionDialog(null,
 							"You win! Press 'Reset Game' to start a new game.",
@@ -237,6 +241,8 @@ public class MineComponent extends JComponent
 	    		if (status == 1){
 					soundName= "resources/sounds/win.wav";
 					playSound(soundName);
+
+					start.stopTimer();
 
 					int response = JOptionPane.showOptionDialog(null,
 							"You win! Press 'Reset Game' to start a new game.",
