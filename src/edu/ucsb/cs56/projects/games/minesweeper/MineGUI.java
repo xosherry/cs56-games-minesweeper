@@ -225,19 +225,11 @@ public class MineGUI {
 		}
 		else if(action == "Main Menu")
 			{
-				button.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						timer.cancel();
-                        timer.purge();
-                        save();
-                        game.setVisible(false);
-                        inUse = false;
-                        refreshFrame(frame);
-                        createMainMenu();
-                        gClock.pauseClock();
-                        menu.setVisible(true);
-			}
-		});
+                button.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        goToMainMenu();
+                    }
+		    });
         
         }
         else if(action == "Quit Minesweeper")
@@ -256,24 +248,7 @@ public class MineGUI {
                     public void actionPerformed(ActionEvent e) {
                         //if (grid.gameStatus(0) == 0){
                             if (overwriteSavePrompt(frame)){
-                                createMainMenu();
-                                timer.cancel();
-                                timer.purge();
-                                menu.setVisible(false);
-                                refreshFrame(frame);
-                                int diff = mc.getGrid().getSize();
-                                if (diff ==10)
-                                {
-                                    newGame(0);
-                                }
-                                else if (diff ==15)
-                                {
-                                    newGame(1);
-                                }
-                                else if (diff ==20)
-                                {
-                                    newGame(2);
-                                }
+                                resetGame();
                             }
                             else {};
                         //}
@@ -398,6 +373,42 @@ public class MineGUI {
             System.exit(0);
         }
 	}
+
+
+	public void resetGame() {
+        createMainMenu();
+        timer.cancel();
+        timer.purge();
+        menu.setVisible(false);
+        refreshFrame(frame);
+        int diff = mc.getGrid().getSize();
+        if (diff ==10)
+        {
+            newGame(0);
+        }
+        else if (diff ==15)
+        {
+            newGame(1);
+        }
+        else if (diff ==20)
+        {
+            newGame(2);
+        }
+    }
+
+    public void goToMainMenu() {
+                timer.cancel();
+                timer.purge();
+                save();
+                game.setVisible(false);
+                inUse = false;
+                refreshFrame(frame);
+                createMainMenu();
+                gClock.pauseClock();
+                menu.setVisible(true);
+    }
+
+
     public static void main (String[] args) {
 	MineGUI frame = new MineGUI();
     }
