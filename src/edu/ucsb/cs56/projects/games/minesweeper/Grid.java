@@ -255,24 +255,25 @@ public class Grid implements Serializable{
 
     public char searchBox(int box){ 
     	char spot='e';
-	if(box >= 0 && box < (size*size)){
-	    spot = grid[box/size][box%size];
-	    if(isFlag(box)){
-		System.out.println("You cannot search a flaged box!");
-	    }
-	    //else if(isMine(box)){ //opens a box that has a mine
-		//map[box/size][box%size] = 'X';
-	    //}
-	    else if(isOpen(box)){
-		System.out.println("You cannot search an opened box!");
-	    }
-	    else{
-		if(spot == '0')
-		    findAllZeros(box/size, box%size);
-		else
-		   map[box/size][box%size] =  spot;
-	    }	
-	}
+		if(box >= 0 && box < (size*size)){
+			// set variable to an object in the grid
+	    	spot = grid[box/size][box%size];
+
+	    	if(isFlag(box)){
+				System.out.println("You cannot search a flaged box!");
+	    	}
+	    	else if(isOpen(box)){
+				System.out.println("You cannot search an opened box!");
+	    	}
+			else{
+				if(spot == '0') {
+					findAllZeros(box / size, box % size);
+				}
+				else {
+					map[box / size][box % size] = spot;
+				}
+			}
+		}
 	return spot;
     }
 
