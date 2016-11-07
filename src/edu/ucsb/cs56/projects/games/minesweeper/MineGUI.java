@@ -80,6 +80,8 @@ public class MineGUI {
 	/** 
 	 *  Starts a new Minesweeper game from the main menu
 	 */
+
+	//TODO: should we delete this? Looks useless
 	public void newGame() {
         
         globalTE = "0";
@@ -376,7 +378,6 @@ public class MineGUI {
 
 
 	public void resetGame() {
-        createMainMenu();
         stopTimer();
         menu.setVisible(false);
         refreshFrame(frame);

@@ -244,6 +244,8 @@ public class MineComponent extends JComponent
 
 					start.stopTimer();
 
+					//TODO: Expose Mines if unopened & not a flag
+
 					int response = JOptionPane.showOptionDialog(null,
 							"You win! Press 'Reset Game' to start a new game.",
 							"Victory!",
@@ -311,11 +313,24 @@ public class MineComponent extends JComponent
 			}
 		}
     }
-	int getStatus(){
+
+//    void exposeMines(){
+////		for each grid
+////				if not a flag and not opened and is an X
+////					show itself
+//		for (int i = 0; i < size; i++){
+//			if (game
+//			}
+//		}
+//	}
+
+    int getStatus(){
 		return status;
 	}
+
 	Grid getGrid(){
 		return game;
 	}
+
 }
 

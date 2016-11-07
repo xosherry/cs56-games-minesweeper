@@ -32,17 +32,18 @@ public class Grid implements Serializable{
      * Default constructor for objects of class GUIGrid
      */
     public Grid(boolean isGUI){
-	this.isGUI=isGUI;
-	size = EASY_SIZE;
-	grid = new char[size][size];
-	map = new char[size][size];
-	setZero();
-	for(int i = 0; i < size; i++){
-	    blankToMine();
-	}
-	insertNums();
-	mapMaker(map);
+		this.isGUI=isGUI;
+		size = EASY_SIZE;
+		grid = new char[size][size];
+		map = new char[size][size];
+		setZero();
+		for(int i = 0; i < size; i++){
+			blankToMine();
+		}
+		insertNums();
+		mapMaker(map);
     }
+
     public void setGrid(char[][] input){ //method that creates a known grid for testing various Grid methods
         grid = input;
         size = 4;
@@ -281,7 +282,7 @@ public class Grid implements Serializable{
  
     public void flagBox(int box){ 
 	if(isFlag(box)){
-	    System.out.println("This box is already flaged!");
+	    System.out.println("This box is already flagged!");
 	    return;
 	}
 	else if(isOpen(box)){
@@ -289,6 +290,7 @@ public class Grid implements Serializable{
 	    return;
 	}
 	else{
+		// TODO: places 'F' only after a left click on a nonflag occurs?
         map[box/size][box%size] = 'F';
 	    return;
 	}
@@ -314,16 +316,16 @@ public class Grid implements Serializable{
      */
 
     public void findAllZeros(int row, int col){ //TODO: throw exception
-	for(int i = row-1; i <= row+1; i++){
-	    for(int j = col-1; j <= col+1; j++){
-		if(i >= 0 && i <= size-1 && j >= 0 && j <= size-1 && !(isMine(i*size+j)) && !(isOpen(i*size+j))){
-		    map[i][j] = grid[i][j];
-		    if(grid[i][j] == '0')
-			findAllZeros(i,j);
+		for(int i = row-1; i <= row+1; i++){
+			for(int j = col-1; j <= col+1; j++){
+				if(i >= 0 && i <= size-1 && j >= 0 && j <= size-1 && !(isMine(i*size+j)) && !(isOpen(i*size+j))){
+					map[i][j] = grid[i][j];
+					if(grid[i][j] == '0')
+					findAllZeros(i,j);
+				}
+
+			}
 		}
-		
-	    }
-	}
     }
 
     /**
@@ -351,7 +353,21 @@ public class Grid implements Serializable{
 	return stat;
     }
 
-    /**
+	/**
+	 * displays the value of the grid on the GUI
+	 */
+	public char[][] displayMines(int size) {
+		for (int i = size - 1; i <= size + 1; i++) {
+			for (int j = size - 1; j <= size + 1; j++) {
+				if (isMine(map[i][j]))
+					map[i][j] = grid[i][j];
+			}
+		}
+		return map;
+	}
+
+
+	/**
      * Finds the current condition of a cell
      */
 
