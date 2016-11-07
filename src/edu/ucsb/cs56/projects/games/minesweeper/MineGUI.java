@@ -355,22 +355,21 @@ public class MineGUI {
 		}
 	}
 	public void save(){
-
-        if (mc!=null){
-            System.out.println("Saving...");
-            mc.getGrid().saveTime = globalTE;
-            try{
-                FileOutputStream fileStream=new FileOutputStream("MyGame.ser");
-                ObjectOutputStream os = new ObjectOutputStream(fileStream);
-                os.writeObject(mc.getGrid());
-                os.close();
+        if (inUse) {
+            if (mc != null) {
+                System.out.println("Saving...");
+                mc.getGrid().saveTime = globalTE;
+                try {
+                    FileOutputStream fileStream = new FileOutputStream("MyGame.ser");
+                    ObjectOutputStream os = new ObjectOutputStream(fileStream);
+                    os.writeObject(mc.getGrid());
+                    os.close();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            } else {
+                System.exit(0);
             }
-            catch(Exception ex){
-                ex.printStackTrace();
-            }
-        }
-        else {
-            System.exit(0);
         }
 	}
 
@@ -396,14 +395,18 @@ public class MineGUI {
     }
 
     public void goToMainMenu() {
-                stopTimer();
-                save();
-                game.setVisible(false);
-                inUse = false;
-                refreshFrame(frame);
-                createMainMenu();
-                gClock.pauseClock();
-                menu.setVisible(true);
+        stopTimer();
+        Grid g = mc.getGrid();
+        int stat = mc.getStatus();
+        if (g.gameStatus(stat) == 0) {
+                    save();
+        }
+        game.setVisible(false);
+        inUse = false;
+        refreshFrame(frame);
+        createMainMenu();
+        gClock.pauseClock();
+        menu.setVisible(true);
     }
 
     public void stopTimer() {
