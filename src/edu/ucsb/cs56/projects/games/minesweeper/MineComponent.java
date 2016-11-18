@@ -156,6 +156,10 @@ public class MineComponent extends JComponent
 	    		status = game.gameStatus(status);
 
 				if (status == -1){
+					// TODO: display mines
+
+					exposeMines();
+
 					start.stopTimer();
 
 					int response = JOptionPane.showOptionDialog(null,
@@ -242,9 +246,9 @@ public class MineComponent extends JComponent
 					soundName= "resources/sounds/win.wav";
 					playSound(soundName);
 
-					start.stopTimer();
+					exposeMines();
 
-					//TODO: Expose Mines if unopened & not a flag
+					start.stopTimer();
 
 					int response = JOptionPane.showOptionDialog(null,
 							"You win! Press 'Reset Game' to start a new game.",
@@ -314,15 +318,20 @@ public class MineComponent extends JComponent
 		}
     }
 
-//    void exposeMines(){
-////		for each grid
-////				if not a flag and not opened and is an X
-////					show itself
-//		for (int i = 0; i < size; i++){
-//			if (game
-//			}
-//		}
-//	}
+	void exposeMines() {
+		Component[] listOfButtons = start.mc.getComponents();
+
+		for (int i=0; i < listOfButtons.length; i++) {
+			if (game.isMine(i)) {
+				JButton mineButton = (JButton) listOfButtons[i]/*button*/;
+				mineButton.setFont(new Font("sansserif", Font.BOLD, 10));
+				mineButton.setText("X");
+			}
+		}
+
+		start.mc.revalidate();
+		start.mc.repaint();
+	}
 
     int getStatus(){
 		return status;

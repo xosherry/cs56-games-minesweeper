@@ -25,6 +25,31 @@ import javax.swing.*;
 	 @see MineGUI
 */
 
+
+/*
+del:
+
+public void refresh(){
+        for(int i=0; i< size; i++){
+        for(int j=0; j< size; j++){
+        JButton jb = buttons[i][j];
+        if(game.getCell(i*size+j) != '?'){
+        int fontSize=jb.getSize().height/2;
+        if (jb.getSize().height/2>jb.getSize().width/4){
+        fontSize=jb.getSize().width/4;
+        }
+        jb.setFont(new Font("sansserif",Font.BOLD,fontSize));
+        if (game.getCell(i*size+j) == 48)
+        jb.setForeground(zero);
+        else if (game.getCell(i*size+j) == 70)
+        jb.setForeground(Color.RED);
+        else if (game.getCell(i*size+j) == 88)
+        jb.setForeground(Col
+
+meep
+*/
+
+
 public class MineGUI {
     JToolBar toolbar;
     JButton mainMenu;
@@ -356,6 +381,32 @@ public class MineGUI {
 			e.printStackTrace();
 		}
 	}
+
+
+    public void displayMines() {
+       /* for (int i = size - 1; i <= size + 1; i++) {
+            for (int j = size - 1; j <= size + 1; j++) {
+                if (isMine(map[i][j]))
+                    map[i][j] = grid[i][j];
+            }
+        }
+        return map;
+        */
+       Grid g = mc.getGrid();
+       g.getG()[1][1]  = 'W';
+        game.add(mc);
+        frame.getContentPane().add(game);
+        mc.refresh();
+    }
+
+
+
+
+
+
+
+
+
 	public void save(){
         if (inUse) {
             if (mc != null) {
@@ -395,6 +446,11 @@ public class MineGUI {
         }
     }
 
+    public void stopTimer() {
+        timer.cancel();
+        timer.purge();
+    }
+
     public void goToMainMenu() {
         stopTimer();
         Grid g = mc.getGrid();
@@ -410,10 +466,8 @@ public class MineGUI {
         menu.setVisible(true);
     }
 
-    public void stopTimer() {
-        timer.cancel();
-        timer.purge();
-    }
+
+
 
     public static void main (String[] args) {
 	MineGUI frame = new MineGUI();
@@ -424,6 +478,11 @@ public class MineGUI {
         frame.getContentPane().revalidate();
         frame.getContentPane().repaint();
     }
+
+
+
+
+
     
     public class Clock extends TimerTask{
         
@@ -468,6 +527,7 @@ public class MineGUI {
             Time.repaint();
         }
 
-    }
+
+    } // class Clock
     
-}
+} // class MineGUI
