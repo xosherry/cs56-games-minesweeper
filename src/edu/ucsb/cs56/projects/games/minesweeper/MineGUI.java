@@ -14,6 +14,11 @@ import java.util.Timer;
 import java.lang.Object;
 import java.lang.Long;
 
+//TODO: Johnny
+import java.io.*;
+import java.util.ArrayList;
+
+
 import javax.swing.*;
 
 /** MineGUI.java is a base that calls all GUI objects and handles tasks
@@ -23,30 +28,6 @@ import javax.swing.*;
      @author David Acevedo
      @version 2015/03/04 for lab07, cs56, W15
 	 @see MineGUI
-*/
-
-
-/*
-del:
-
-public void refresh(){
-        for(int i=0; i< size; i++){
-        for(int j=0; j< size; j++){
-        JButton jb = buttons[i][j];
-        if(game.getCell(i*size+j) != '?'){
-        int fontSize=jb.getSize().height/2;
-        if (jb.getSize().height/2>jb.getSize().width/4){
-        fontSize=jb.getSize().width/4;
-        }
-        jb.setFont(new Font("sansserif",Font.BOLD,fontSize));
-        if (game.getCell(i*size+j) == 48)
-        jb.setForeground(zero);
-        else if (game.getCell(i*size+j) == 70)
-        jb.setForeground(Color.RED);
-        else if (game.getCell(i*size+j) == 88)
-        jb.setForeground(Col
-
-meep
 */
 
 
@@ -71,6 +52,12 @@ public class MineGUI {
     int timeTBPos;
     Timer timer;
     String globalTE = new String("0");
+
+    JScrollPane scroller;
+    JLabel highScore; // this label status displays the local high score.
+    JTextArea highScoreList;
+    JTextField Username;
+    String User="";
     
     
 	MineComponent mc; //MineComponent is the actual layout of the game, and what makes the game function
@@ -160,29 +147,59 @@ public class MineGUI {
 	 */
 	public void createMainMenu(){
         frame.setSize(650, 600);
-		menu = new JPanel(new GridLayout(4,0));		//our 2 section grid layout for our main menu
+        menu = new JPanel(new GridLayout(4, 0));        //our 2 section grid layout for our main menu
         quitMine = new JButton("Quit Minesweeper");
-		easyGame = new JButton("New Easy Game");
-		medGame = new JButton("New Medium Game");
-		hardGame = new JButton("New Hard Game");
-		help = new JButton("Help");
-		load = new JButton("Load Last Game");
-		addActionListener(easyGame, "New Easy Game");
-		addActionListener(medGame, "New Medium Game");
-		addActionListener(hardGame, "New Hard Game");
-		addActionListener(help, "Help");
-		addActionListener(load,"Load");
+        easyGame = new JButton("New Easy Game");
+        medGame = new JButton("New Medium Game");
+        hardGame = new JButton("New Hard Game");
+        help = new JButton("Help");
+        load = new JButton("Load Last Game");
+
+        Username = new JTextField("Name: ");
+        highScore = new JLabel("Leaderboards: "); // added another JLabel
+        highScoreList = new JTextArea(10,20);
+        scroller = new JScrollPane(highScoreList);
+
+        highScoreList.setLineWrap(true);
+
+        scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        highScoreList.append(getHighScores());
+
+
+        addActionListener(Username);
+        addActionListener(easyGame, "New Easy Game");
+        addActionListener(medGame, "New Medium Game");
+        addActionListener(hardGame, "New Hard Game");
+        addActionListener(help, "Help");
+        addActionListener(load, "Load");
         addActionListener(quitMine, "Quit Minesweeper");
-		menu.add(easyGame);
-		menu.add(medGame);
-		menu.add(hardGame);
-		menu.add(load);
-		menu.add(help);
+        menu.add(easyGame);
+        menu.add(medGame);
+        menu.add(hardGame);
+        menu.add(load);
+        menu.add(help);
         menu.add(quitMine);
-		frame.getContentPane().add(menu);
+
+        menu.add(highScore); // add new highScore feature to frame.
+        //menu.add(highScoreList);
+        menu.add(scroller);
+        menu.add(Username);
+
+        frame.getContentPane().add(menu);
         inUse = false;
-	}
-    
+    }
+
+	public void addActionListener(JTextField text){
+        text.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                User = text.getText();
+                System.out.println("User is set to: " + User);
+            }
+        });
+    }
+
+
     public void createToolbar(JToolBar toolbar){
         //make buttons
         
@@ -427,6 +444,91 @@ public class MineGUI {
 	}
 
 
+
+	// TODO: Johnny
+    int lowestTime=1000;
+    int count=1;
+    public void saveHighest(String name, String time, int difficulty) { //will throw an exception if highscore.txt doesn't exist, but will create one when you win the game.
+        int t = Integer.parseInt(time);
+        String line="";
+        /*//initialize count first.
+        try {
+            File myFile = new File("HighScore.txt");
+            FileReader filereader = new FileReader(myFile);
+            BufferedReader reader = new BufferedReader(filereader);
+            while ((line = reader.readLine()) != null) {
+                int c = Integer.parseInt(line);
+                if (c % 2 == 1 && c < 50) { //every odd entry
+                    //count = Integer.parseInt(line); //UPDATES COUNT
+                    count++;
+                }
+                reader.close();
+            }
+        }catch(IOException e){
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+*/
+        // write to a file if the game is won, include timer for highest score.
+        System.out.println("Saving high score only if you WIN game");
+        //if (t < lowestTime) {
+        try (FileWriter fw = new FileWriter("HighScore.txt", true);
+             BufferedWriter bw = new BufferedWriter(fw);
+             PrintWriter out = new PrintWriter(bw)) {
+            String countString = Integer.toString(count);
+            // out.println(countString);
+            out.println(name + " finished " + difToString(difficulty) + " difficulty in " + time + " seconds!");
+            //lowestTime = t;
+            //count++;
+        } catch (IOException e) {
+            //exception handling left as an exercise for the reader
+        }
+        // }
+    }
+
+    public String getHighScores() {
+        int num=count;
+        System.out.println("Loading high scores onto mainframe");
+        String score = "";
+        String line = "";
+        try {
+            File myFile = new File("HighScore.txt");
+            FileReader filereader = new FileReader(myFile);
+            BufferedReader reader = new BufferedReader(filereader);
+            while ((line = reader.readLine()) != null) {
+                //while(num > -1) {
+                score += line + "\n";
+                //    num--;
+                //}
+            }
+            reader.close();
+        } catch(IOException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        // sort scores by smallest time
+
+
+        return score;
+    }
+    public String difToString(int difficulty){
+        if (difficulty ==10)
+        {
+            return "Easy";
+        }
+        else if (difficulty ==15)
+        {
+            return "Medium";
+        }
+        else if (difficulty ==20)
+        {
+            return "Hard";
+        }
+        return "";
+    }
+
+
 	public void resetGame() {
         stopTimer();
         menu.setVisible(false);
@@ -495,6 +597,7 @@ public class MineGUI {
         long resClock;
         String timeElapsed;
         String leftOver = new String("");
+
         
         public Clock(){
             

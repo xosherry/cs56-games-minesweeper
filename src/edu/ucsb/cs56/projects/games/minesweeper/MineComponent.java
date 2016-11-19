@@ -173,10 +173,12 @@ public class MineComponent extends JComponent
 
 					if (response == JOptionPane.YES_OPTION)
 					{
+						start.saveHighest(start.User,start.globalTE,start.mc.getGrid().getSize());
 						start.goToMainMenu();
 					}
 					else
 					{
+						start.saveHighest(start.User,start.globalTE,start.mc.getGrid().getSize());
 						start.resetGame();
 					}
 
@@ -261,10 +263,12 @@ public class MineComponent extends JComponent
 
 					if (response == JOptionPane.YES_OPTION)
 					{
+						start.saveHighest(start.User,start.globalTE,start.mc.getGrid().getSize());
 						start.goToMainMenu();
 					}
 					else
 					{
+						start.saveHighest(start.User,start.globalTE,start.mc.getGrid().getSize());
 						start.resetGame();
 					}
 	    		}
@@ -323,7 +327,7 @@ public class MineComponent extends JComponent
 
 		for (int i=0; i < listOfButtons.length; i++) {
 			if (game.isMine(i)) {
-				JButton mineButton = (JButton) listOfButtons[i]/*button*/;
+				JButton mineButton = (JButton) listOfButtons[i];
 				mineButton.setFont(new Font("sansserif", Font.BOLD, 10));
 				mineButton.setText("X");
 			}
