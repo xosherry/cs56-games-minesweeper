@@ -185,22 +185,28 @@ public class MineComponent extends JComponent
 					start.stopTimer();
 
 					int response = JOptionPane.showOptionDialog(null,
-							"You win! Press 'Reset Game' to start a new game.",
-							"Victory!",
-							JOptionPane.OK_CANCEL_OPTION,
-							JOptionPane.INFORMATION_MESSAGE,
-							null,
-							new String[]{"Main Menu", "Reset Game"},
-							"default");
+                            "You win! Press 'Reset Game' to start a new game.",
+                            "Victory!",
+                            JOptionPane.OK_CANCEL_OPTION,
+                            JOptionPane.INFORMATION_MESSAGE,
+                            //JOptionPane.WRITE,
+                            null,
+                            new String[]{"Main Menu", "Reset Game"},
+                            "default");
 
 					if (response == JOptionPane.YES_OPTION)
 					{
+                        start.saveHighest(start.User,start.globalTE,start.mc.getGrid().getSize());
 						start.goToMainMenu();
 					}
-					else
+					else if (response == JOptionPane.INFORMATION_MESSAGE)
 					{
+                        start.saveHighest(start.User,start.globalTE,start.mc.getGrid().getSize());
 						start.resetGame();
 					}
+					else{
+                        //do nothing
+                    }
 				}
 
 	    	}
@@ -245,7 +251,7 @@ public class MineComponent extends JComponent
 					start.stopTimer();
 
 					//TODO: Expose Mines if unopened & not a flag
-
+                    // FOR RIGHT CLICK WINNERS
 					int response = JOptionPane.showOptionDialog(null,
 							"You win! Press 'Reset Game' to start a new game.",
 							"Victory!",
@@ -257,12 +263,18 @@ public class MineComponent extends JComponent
 
 					if (response == JOptionPane.YES_OPTION)
 					{
+                        start.saveHighest(start.User,start.globalTE,start.mc.getGrid().getSize());
 						start.goToMainMenu();
 					}
-					else
+                    else if (response == JOptionPane.INFORMATION_MESSAGE)
 					{
+                        start.saveHighest(start.User,start.globalTE,start.mc.getGrid().getSize());
 						start.resetGame();
 					}
+					else{
+                        // do nothing
+
+                    }
 	    		}
 	    	}
             else if (event.getButton() == MouseEvent.BUTTON1 && game.isOpen(num)){

@@ -60,6 +60,19 @@
       <formatter type="plain" usefile="false" />        
     </junit>
   </target>
+
+    <target name="test2" depends="compile" description="uses test class">
+        <junit haltonerror="no" haltonfailure="no">
+            <classpath refid="project.class.path" />
+            <batchtest>
+                <fileset dir="src">
+                    <!-- this will pick up every class with a name ending in Test -->
+                    <include name="**/GUITest.java"/>
+                </fileset>
+            </batchtest>
+            <formatter type="plain" usefile="false" />
+        </junit>
+    </target>
   
 
  <target name="mine" depends="compile" description="runs the class MineGUI for graphical minesweeper">
