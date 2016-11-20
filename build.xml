@@ -9,11 +9,10 @@
     <property name="webBaseURL" value="http://www.cs.ucsb.edu/~${env.USER}" />
     <property name="project" value="cs56-games-minesweeper" />
 
+    <!--
     <property name="javadocDest" value="${webRoot}/${project}/javadoc" />
-    <property name="javadoc_absolute_path" location="javadoc"/>
-    <property name="javadocURL" location="../cs56-games-minesweeper/javadoc"/>
-
-
+    <property name="javadocURL" value="${webBaseURL}/${project}/javadoc" />
+    -->
 
     <property name="MainClassText" value="TextGame" />
     <property name="MainClassGui" value="MineGUI" />
@@ -35,30 +34,37 @@
         <delete dir="javadoc" quiet="true" />
     </target>
 
+    <!--
     <target name="javadoc" depends="compile" description="makes the javadoc descriptions">
         <delete dir="javadoc" quiet="true" />
         <javadoc  destdir="javadoc" author="true" version="true" use="true" >
             <fileset dir="src" includes="**/*.java"/>
             <classpath refid="project.class.path" />
-
-            <link href="https://docs.oracle.com/javase/8/docs/api/" />
-
         </javadoc>
-
-        <delete quiet="true">
-            <fileset dir="${javadocURL}" />
-        </delete>
-
-        <!--
+        <delete quiet="true" dir="${javadocDest}" />
+        <copy todir="${javadocDest}" >
+            <fileset dir="javadoc"/>
+        </copy>
         <chmod dir="${javadocDest}" perm="755"  type="dir" includes="**" />
         <chmod dir="${javadocDest}" perm="755"  type="file" includes="**/*" />
-        -->
-
         <echo>Javadoc deployed to ${javadocURL} if on CSIL</echo>
         <echo> or if not on CSIL, try file:///${javadocDest}/index.html</echo>
-        <echo> TO PUBLISH: git add javadoc, git commit -m "update javadoc"; git push origin gh-pages. Check it
-            out on YOURGITHUBID.github.io/cs56-games-minesweeper/javadoc/</echo>
     </target>
+    -->
+
+    <target name="javadoc">
+        <javadoc packagenames="edu.ucsb.cs56.projects.games.minesweeper"
+                 sourcepath="src"
+                 destdir="../javadoc"
+                 author="true"
+                 version="false"
+                 windowtitle="Minesweeper javadoc">
+        </javadoc>
+        <echo>
+            generating javadoc...
+        </echo>
+    </target>
+
 
     <target name="test" depends="compile" description="uses test class">
         <junit haltonerror="no" haltonfailure="no">
@@ -72,6 +78,7 @@
             <formatter type="plain" usefile="false" />
         </junit>
     </target>
+
 
 
     <target name="mine" depends="compile" description="runs the class MineGUI for graphical minesweeper">
