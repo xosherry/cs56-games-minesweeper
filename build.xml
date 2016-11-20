@@ -37,6 +37,9 @@
         <javadoc  destdir="javadoc" author="true" version="true" use="true" >
             <fileset dir="src" includes="**/*.java"/>
             <classpath refid="project.class.path" />
+
+            <link href="https://docs.oracle.com/javase/8/docs/api/" />
+
         </javadoc>
         <delete quiet="true" dir="${javadocDest}" />
         <copy todir="${javadocDest}" >
@@ -46,6 +49,7 @@
         <chmod dir="${javadocDest}" perm="755"  type="file" includes="**/*" />
         <echo>Javadoc deployed to ${javadocURL} if on CSIL</echo>
         <echo> or if not on CSIL, try file:///${javadocDest}/index.html</echo>
+        <echo> TO PUBLISH: git add javadoc, git commit -m "update javadoc"; git push origin gh-pagesgi</echo>
     </target>
 
     <target name="test" depends="compile" description="uses test class">
