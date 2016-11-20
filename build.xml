@@ -10,7 +10,10 @@
     <property name="project" value="cs56-games-minesweeper" />
 
     <property name="javadocDest" value="${webRoot}/${project}/javadoc" />
-    <property name="javadocURL" value="${webBaseURL}/${project}/javadoc" />
+    <property name="javadoc_absolute_path" location="javadoc"/>
+    <property name="javadocURL" location="../cs56-games-minesweeper/javadoc"/>
+
+
 
     <property name="MainClassText" value="TextGame" />
     <property name="MainClassGui" value="MineGUI" />
@@ -41,26 +44,17 @@
             <link href="https://docs.oracle.com/javase/8/docs/api/" />
 
         </javadoc>
-        <!--
-        <delete quiet="true" dir="${javadocDest}" />
-        <copy todir="${javadocDest}" >
-        -->
+
         <delete quiet="true">
             <fileset dir="${javadocURL}" />
         </delete>
-        <mkdir dir="${javadocURL}" />
-        <copy todir="${javadocURL}">
-            <fileset dir="javadoc" />
-        </copy>
-        <!--
-        <fileset dir="javadoc"/>
-        </copy>
-        -->
+
         <chmod dir="${javadocDest}" perm="755"  type="dir" includes="**" />
         <chmod dir="${javadocDest}" perm="755"  type="file" includes="**/*" />
         <echo>Javadoc deployed to ${javadocURL} if on CSIL</echo>
         <echo> or if not on CSIL, try file:///${javadocDest}/index.html</echo>
-        <echo> TO PUBLISH: git add javadoc, git commit -m "update javadoc"; git push origin gh-pagesgi</echo>
+        <echo> TO PUBLISH: git add javadoc, git commit -m "update javadoc"; git push origin gh-pages. Check it
+            out on YOURGITHUBID.github.io/cs56-games-minesweeper/javadoc/</echo>
     </target>
 
     <target name="test" depends="compile" description="uses test class">
