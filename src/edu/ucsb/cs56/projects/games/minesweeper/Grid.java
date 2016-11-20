@@ -2,7 +2,7 @@ package edu.ucsb.cs56.projects.games.minesweeper;
 
 import java.io.Serializable;
 
-/** !The Grid class is the foundation for minesweeper, applies mine locations, checks if something is open,
+/** Hello, The Grid class is the foundation for minesweeper, applies mine locations, checks if something is open,
 	makes flags functional, etc.
 	@author Caleb Nelson
     @author David Acevedo

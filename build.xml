@@ -49,8 +49,11 @@
             <fileset dir="${javadocURL}" />
         </delete>
 
+        <!--
         <chmod dir="${javadocDest}" perm="755"  type="dir" includes="**" />
         <chmod dir="${javadocDest}" perm="755"  type="file" includes="**/*" />
+        -->
+
         <echo>Javadoc deployed to ${javadocURL} if on CSIL</echo>
         <echo> or if not on CSIL, try file:///${javadocDest}/index.html</echo>
         <echo> TO PUBLISH: git add javadoc, git commit -m "update javadoc"; git push origin gh-pages. Check it
