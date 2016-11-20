@@ -41,10 +41,21 @@
             <link href="https://docs.oracle.com/javase/8/docs/api/" />
 
         </javadoc>
+        <!--
         <delete quiet="true" dir="${javadocDest}" />
         <copy todir="${javadocDest}" >
-            <fileset dir="javadoc"/>
+        -->
+        <delete quiet="true">
+            <fileset dir="${javadocURL}" />
+        </delete>
+        <mkdir dir="${javadocURL}" />
+        <copy todir="${javadocURL}">
+            <fileset dir="javadoc" />
         </copy>
+        <!--
+        <fileset dir="javadoc"/>
+        </copy>
+        -->
         <chmod dir="${javadocDest}" perm="755"  type="dir" includes="**" />
         <chmod dir="${javadocDest}" perm="755"  type="file" includes="**/*" />
         <echo>Javadoc deployed to ${javadocURL} if on CSIL</echo>
