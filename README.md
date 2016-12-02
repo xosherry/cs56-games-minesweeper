@@ -59,3 +59,5 @@ Know that:
 1. Grid is the 2D array that holds ONLY mines.
 2. Map is the 2D array that holds what the user puts down (whether an entry has been "opened" aka clicked on by the user, whether an entry is a flag, etc...)
 3. Thus grid and Map interactions make up the game.
+
+The way that the code is written is kind of messy because the naming of the variables is inconsistent from file to file. The functions are scattered. So refactoring would be good. Also remove the commented out code if it doesn't help you. 
